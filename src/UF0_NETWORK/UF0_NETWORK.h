@@ -1,12 +1,30 @@
+/*
+    *** WiFi & WebServer related operations ***
+
+          UF0_WEBSERVER class:
+
+          UF0_WiFi class:
+
+          HTMLprocessor:
+            Parse & process HTML placeholders
+
+          connectWiFi:
+            Connect to WLAN
+
+          setup_WiFi:
+            Initialize WiFi systems
+*/
+
 #ifndef UF0_NETWORK_h
 #define UF0_NETWORK_h
 
 // Preliminary
-  // // Enterprise
-    #include <UF0_DBG.h>
-    #include "UF0_MIDI.h"
-    UF0_MIDI *midii;
-    #include "UF0_BLACKMAGIC.h"
+    #include "UF0_HARDWARE/UF0_HARDWARE.h"
+    UF0_POWER *pwr;
+    #include "UF0_OS/UF0_DBG.h"
+    #include "UF0_MUSIC/UF0_MIDI.h"
+    UF0_MIDI *midii;    
+    #include "UF0_OS/UF0_BLACKMAGIC.h"
     UF0_BLACKMAGIC *bm;
   // Wi-Fi
     #include <WiFi.h>
@@ -16,10 +34,17 @@
   // Web pages (HTML)
     #include "UF0_HTML_PAGES\credentialsPage.h"
     #include "UF0_HTML_PAGES\presetsPage.h"
+    #include "UF0_HTML_PAGES\batteryGaugePage.h"
     
   // AP preliminary
     char AP_ssid[50];
   // STA preliminary
+    // Set Static IP address
+    IPAddress local_IP(192, 168, 137, 27);
+    IPAddress gateway(192, 168, 1, 1);
+    IPAddress subnet(255, 255, 0, 0);
+    IPAddress primaryDNS(8, 8, 8, 8);
+    IPAddress secondaryDNS(8, 8, 4, 4);
     // char STA_ssid[50] = "Teles PC";
     // char STA_pass[50] = "987654321";
     String STA_ssid;
@@ -51,14 +76,29 @@ const char* HTMLprocessor(const String& var){
   }else if(var == "isConnected"){
     return (connected2WiFi ? "Connected to WiFi!" : "Not connected to WiFi");
   }
-  return "";
+  return "fail";
 }
 
 void controlServerRequests(){
+  DBG("WFFW333", pwr->get_battery_percent());
   controlServer.onNotFound(notFound);
   
   controlServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", credentialsHTML, HTMLprocessor);
+    /////////////////////////////////////////////////////////
+    int temp = pwr->get_battery_percent();
+    // float temp = millis();
+    String batteryStr = String(temp);
+    request->send(200, "text/plain", batteryStr);
+    /////////////////////////////////////////////////////////
+
+    // request->send_P(200, "text/html", credentialsHTML, HTMLprocessor);
+  });
+  
+  controlServer.on("/battery", HTTP_GET, [](AsyncWebServerRequest *request){
+    // int temp = pwr->get_battery_percent();
+    float temp = millis();
+    String batteryStr = String(temp, 2);
+    request->send_P(200, "text/html", batteryGaugeHTML, HTMLprocessor);
   });
   
   controlServer.on("/connect", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -72,7 +112,7 @@ void controlServerRequests(){
     // DBG("Disconnected Setup AP");
   });
   
-  controlServer.on("/jamm~!", HTTP_GET, [](AsyncWebServerRequest *request){
+  controlServer.on("/jam", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
 
@@ -167,27 +207,26 @@ void controlServerRequests(){
 void connectWiFi(AsyncWebServerRequest *request = NULL){
   // STA_ssid = request->arg("ssid");
   // STA_pass = request->arg("password");
-  STA_ssid = "Teles PC";
+  STA_ssid = "Teles Mobile";
   STA_pass = "987654321";
   DBG("Credentials entered: UN =", STA_ssid, "PW =", STA_pass);
 // Opening Station mode
   DBG(F("Initializing Wi-Fi station mode"));
   WiFi.begin(STA_ssid, STA_pass);
-  DBG(F("Establishing Wi-Fi connection to"), STA_ssid);
+  Serial.print("Establishing Wi-Fi connection to ");
+  Serial.print(STA_ssid);
   while (WiFi.status() != connected2WiFi){
-    if ((millis() - NETWORK_t0) > 1000){
+    if ((millis() - NETWORK_t0) > 300){
       Serial.print(".");
       NETWORK_t0 = millis();
     }
   }
-  DBG("");
-  STA_IP = WiFi.localIP();
   snprintf(AP_ssid, sizeof(AP_ssid), "%d.%d.%d.%d", STA_IP[0], STA_IP[1], STA_IP[2], STA_IP[3]);
   snprintf(STA_IP_URL, sizeof(STA_IP_URL), "http://%s/jamm~!", AP_ssid);
 }
 
 void WiFiStationConnected(WiFiEvent_t wifi_event, WiFiEventInfo_t wifi_info){
-  DBG("Connected to the dashing \'*oO", STA_ssid, "Oo*\'");
+  DBG("\nConnected to the dashing \'*oO", STA_ssid, "Oo*\'");
   WiFi.softAPdisconnect(true);
   connected2WiFi = WiFi.status();
 }
@@ -209,7 +248,11 @@ void setup_WiFi(){
     WiFi.softAP("UF0 Setup");
   // Start server
     DBG("Starting setup server");
-    controlServer.begin();
+    controlServer.begin(); 
+  // Configure WiFi
+    // if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)){
+    //   DBG(F("!! WiFi station monde failed to configure !!"));
+    // }
   // Connect to WiFi
     connectWiFi();
 }
@@ -220,7 +263,9 @@ class UF0_WEBSERVER{
   public:
     UF0_WEBSERVER(){}
 
-    UF0_WEBSERVER(UF0_MIDI *midiii, UF0_BLACKMAGIC *bmm){
+    UF0_WEBSERVER(UF0_POWER *pwrr, UF0_MIDI *midiii, UF0_BLACKMAGIC *bmm){
+      // DBG("WFFW1", pwr->get_battery_percent());
+      pwr = pwrr;
       midii = midiii;
       bm = bmm;
 
@@ -231,6 +276,7 @@ class UF0_WEBSERVER{
     void setup_webServer(){
       // setupServerRequests();
       controlServerRequests();
+      DBG("WFFW1", pwr->get_battery_percent());
     }
 
     // Define website server requests

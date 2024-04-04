@@ -35,8 +35,8 @@ enum Motion{
 	MOTION_BOB,
 	MOTION_ROLL,
 	MOTION_YAW,
-	MOTION_JOYSTICK_X,
-	MOTION_JOYSTICK_Y,
+	MOTION_JOYSTICK_HORIZONTAL,
+	MOTION_JOYSTICK_VERTICAL,
 	MOTION_JOYSTICK_UP,
 	MOTION_JOYSTICK_DOWN,
 	MOTION_JOYSTICK_LEFT,
@@ -82,8 +82,8 @@ public:
 
 class ControlElement{
 protected:
-  int handID;
-	char* name;
+	char* name{nullptr};
+  // int handID;
 	Controller controller;
 	Motion motion;
 	int motionLimitsMin{-90};
@@ -95,8 +95,10 @@ protected:
 	int VG_Y{0};
 
 public:
+    ControlElement(){}
     ControlElement(char* n) : name(n) {}
-    virtual const char* getName() const {return name;}
+    virtual ~ControlElement(){}
+    virtual char* getName() const {return name;}
 };
 
 class Control : public ControlElement{
@@ -105,7 +107,7 @@ private:
 	int CC{176};
 
 public:
-	// Control(char* name){};
+	Control(char* name) : ControlElement(name){};
 	void abolish(){
 		// ~Control();
 	}
@@ -117,7 +119,9 @@ private:
 	Chord* chord;
 
 public:
-	Chord_Control(char* name) : ControlElement(name){}
+	Chord_Control(char* name) : ControlElement(name){
+		// this.chord = new Chord;
+	}
 };
 
 class Scale_Control : public ControlElement{
@@ -136,10 +140,11 @@ public:
 	Arpeggiator_Control(char* name) : ControlElement(name){}
 };
 
-class Riff_Control{
+class Riff_Control : public ControlElement{
 private:
 	
 public:
+	Riff_Control(char* name) : ControlElement(name){}
 };
 
 class Preset{
@@ -196,7 +201,7 @@ public:
 	}
 };
 
-class PresetHandler{
+class UF0_PRESET_HANDLER{
 private:
 	int* copyBuffer;	// has max 1 item?
 
@@ -211,16 +216,25 @@ private:
 public:
 	Bank* bankList[8];
 
-	PresetHandler(){
+	UF0_PRESET_HANDLER(){}
+
+	UF0_PRESET_HANDLER(bool cmon){
 		for (int i=0; i<8; ++i){
 			bankList[i] = new Bank(i);
+			DBG(bankList[i]->id);
 			for (int j=0; j<8; ++j){
 				bankList[i]->setList[j] = new Set(i*8+j);
+				DBG(bankList[i]->setList[j]->id);
 				for (int k=0; k<8; ++k){
 					bankList[i]->setList[j]->presetList[k] = new Preset(i*8+j*8+k);
+					DBG(bankList[i]->setList[j]->presetList[k]->id);
 				}
 			}
 		}
+	}
+
+	void loop(){
+
 	}
 
 	void loadCollection(){

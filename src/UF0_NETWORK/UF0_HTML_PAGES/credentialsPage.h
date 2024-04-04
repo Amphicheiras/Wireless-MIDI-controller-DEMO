@@ -35,7 +35,8 @@ const char* credentialsHTML = R"=====(
       <a href=/redirect\">Jam!</a><br>
       <span id="isConnected">%isConnected%</span>
     </form>
-    <script>
+    
+    <script>        
       document.getElementById("connectBtn").onclick = function() {
         var ssid = document.getElementById("ssid").value;
         var password = document.getElementById("password").value;

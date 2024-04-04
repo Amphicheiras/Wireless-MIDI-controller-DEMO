@@ -2,53 +2,64 @@
 
   What works:
     Buttons
-      Shift/Fn key (solo key)
-      Toggle transmission
+      -
     Triggerz
       send MIDI note
-      send MIDI chord
     Joystick*
       Click (unasigned)
     LED*
     Gyro
     Wi-Fi
-    Web Server
+    Web Server**
     MIDI over Wi-Fi
     Preset Save/Load
     Virtual Grid
     Drum Hit
 
   What does'nt:
-    * joystick XY (broken hardware)
-    * broken hardware
+    * needs testing
+    ** needs fixing
 
   TO - DOs:
     v0.5:
-      On / Off the webServer when connecting to LAN
+    
+      Plug in OS + Preset System
 
-      inheritances in preset_system.h
+      DBG freakin online battery display
+
+    v0.6:
 
       try pairing!
 
-      calculate battery percentage?
+      add viber
+
+      UF0_HARDWARE.h -> UF0_HW_HANDLER +
+                     -> UF0_BUTTON +
+                     -> UF0_TRIGGER +
+                     -> UF0_LED +
+                     -> UF0_POWER +
+                     -> UF0_VIBER
 
       try pico wifi HID -> try library for esp wifi HID?
       solder + test joystick mouse with pico
 
-      Send auto-connect to rtpMIDI? (check other example with ws500, mail Thobias?)
+      virtualMIDI
+
+      option for On / Off the webServer when connecting to LAN
+      redirect from 192.168.4.1/ -> 192.168.1.158/jamm~! (in one button -> Connect!)
 
     LED:
       Ambient light presets
-      When saving preset blink LED & press continue
+      When saving preset blink LED & press continue?
     HW:
-      Fix an (ideally) WiFi Joystick mouse
+      WiFi Joystick HID mouse
     Network:
-      design controlPage HTML
-      make API for HTML page
-      redirect from 192.168.4.1/ -> 192.168.1.158/jamm~! (in one button -> Connect!)
+      design HTML
+      finish HTML API
     MISC:
       invent new notes! (name, freq/pitch)
-      abstract & polymorph & inheritance? (UF0_MIDI extends APPLEMIDI?)
+    MIDI:
+      UF0_MIDI extends AppleMIDI?
     XRTS:
       xtaskcreate -> loopbutton core 1 (task ex.)
       task no affinity
@@ -62,22 +73,25 @@
   #include <Arduino.h>
   // Enterprise
     #define UF0_DBG Serial
-    #include <UF0_DBG.h>
-    #include "UF0_MUSIC_THEORY.h"
-    #include "UF0_PRESET_SYSTEM.h"
-    #include "UF0_FSM.h"
-    #include "UF0_GYRO.h"
-    #include "UF0_NETWORK\UF0_NETWORK.h"
-    #include "UF0_MIDI.h"
-    #include "UF0_BLACKMAGIC.h"
-    #include "UF0_HARDWARE.h"
+    #include <UF0_OS/UF0_DBG.h>
+    #include <UF0_MUSIC/UF0_PRESET_SYSTEM.h>
+    #include <UF0_OS/UF0_FSM.h>
+    #include <UF0_HARDWARE/UF0_GYRO.h>
+    #include <UF0_NETWORK/UF0_NETWORK.h>
+    #include <UF0_NETWORK/UF0_WEBSITE_API.h>
+    #include <UF0_MUSIC/UF0_MIDI.h>
+    #include <UF0_OS/UF0_BLACKMAGIC.h>
+    #include <UF0_HARDWARE/UF0_HARDWARE.h>
+    #include <UF0_NETWORK/UF0_WEBSITE_API.h>
 
     
   // Instances
+    UF0_PRESET_HANDLER presetHandler;
     UF0_BUTTON buttonDriver;
     UF0_TRIGGER triggerDriver;
     UF0_JOYSTICK joystickDriver;
-    UF0_LED ledDriver;
+    UF0_LED_handler ledHandler;
+    UF0_POWER powerHandler;
     UF0_GYRO gyroDriver;
     UF0_WiFi WiFiDriver;
     UF0_WEBSERVER serverDriver;
@@ -86,14 +100,13 @@
     UF0_BLACKMAGIC blackmagic;
 //
 
-// unsigned long OS_timer{0};
-// int OS_clock{10};
-
 void setup(){
   DBG_SETUP(115200);
   delay(1000);
   DBG(F("===================== Das Booting ==================="));
   init();
+  DBG(F("===================== BOOT PRESETS ==================="));
+  UF0_PRESET_HANDLER presetHandler(true);
   DBG(F("===================== BOOT BUTTONS ==================="));
   UF0_BUTTON buttonDriver(&midiDriver);
   DBG(F("===================== BOOT TRIGGERS ==================="));
@@ -101,9 +114,12 @@ void setup(){
   DBG(F("===================== BOOT JOYSTICK ==================="));
   UF0_JOYSTICK joystickDriver(true);
   DBG(F("===================== BOOT LED ==================="));
-  UF0_LED ledDriver;
+  UF0_LED_handler ledHandler(true);
+  DBG(F("===================== BOOT POWER ==================="));
+  UF0_POWER powerHandler(true);
   DBG(F("===================== BOOT WEBSERVER ==================="));
-  UF0_WEBSERVER serverDriver(&midiDriver, &blackmagic);
+  DBG("Batter %:", powerHandler.get_battery_percent());
+  UF0_WEBSERVER serverDriver(&powerHandler, &midiDriver, &blackmagic);
   DBG(F("===================== BOOT WIFI ==================="));
   UF0_WiFi WiFiDriver(true);
   DBG(F("===================== BOOT GYRO ==================="));
@@ -115,19 +131,20 @@ void setup(){
   DBG(F("===================== BOOT BM ==================="));
   UF0_BLACKMAGIC blackmagic(true);
   DBG(F("===================== BOOT COMPLETE ==================="));
-  ledDriver.celebrate();
+  ledHandler.celebrate();
+  // WebsiteAPI api;
+  // api.setupWebSite();
+  // DBG(api.readHTML());
 }
 
 void loop(){
-  // if ((millis() - OS_timer) > OS_clock){
+    presetHandler.loop();
     buttonDriver.loop();
     triggerDriver.loop();
     joystickDriver.loop();
-    ledDriver.loop();
+    ledHandler.loop();
     midiDriver.loop();
     gyroDriver.loop();
     fsmDriver.loop();
     blackmagic.loop();
-    // OS_timer = millis();
-  // }
 }

@@ -11,10 +11,10 @@
 
 // pop_XY = population XY, Mmin_XY = XY min movement, Mmax_XY = XY max movement
 int virtualGrid(int pop_X, int pop_Y, float Mmin_X, float Mmax_X, float Mmin_Y, float Mmax_Y){
-  // DoF = Degrees of Freedom (Movement)
+// DoF = Degrees of Freedom (Movement)
   float DoF_X = Mmax_X - Mmin_X;
   float DoF_Y = Mmax_Y - Mmin_Y;
-  // tick = 1 cell step
+// 1 tick is 1 cell step
   float tick_X = DoF_X / pop_X;
   float tick_Y = DoF_Y / pop_Y;
   for(int i=0; i<pop_X; i++){
@@ -35,7 +35,6 @@ class UF0_BLACKMAGIC{
   private:
 
     void setup(){
-      // Load presets
       loadPreset();
     }
 
@@ -85,9 +84,9 @@ class UF0_BLACKMAGIC{
       // preferences.remove()?
     }
 
-    // Write to disk
+  // Write to disk
     void savePreset(){
-      // pref.begin("",T/F): True -> Read only | False -> Read/Write
+    // Begin: True -> Read only | False -> Read/Write
       preferences.begin("gyroStates", false);
       preferences.putBool("activeX", pitch);
       preferences.putBool("activeY", roll);
@@ -96,12 +95,12 @@ class UF0_BLACKMAGIC{
       preferences.end();
     }
 
-    // Read from disk
+  // Read from disk
     void loadPreset(){
       preferences.begin("gyroStates", false);
-      pitchTransmit = false;/*getBool("activeX", "");*/
-      rollTransmit = false;/*getBool("activeY", "");*/
-      yawTransmit = false;/*getBool("activeZ", "");*/
+      pitchTransmit = preferences.getBool("activeX", "");
+      rollTransmit = preferences.getBool("activeY", "");
+      yawTransmit = preferences.getBool("activeZ", "");
       preferences.end();
     }
 };

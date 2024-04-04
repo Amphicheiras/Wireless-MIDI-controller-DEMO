@@ -1,3 +1,20 @@
+/*
+    *** GYRO related operations ***
+
+          UF0_GYRO class:
+
+          resetHeading:
+            Update initHeading
+
+          getRelativeHeading:
+            Get controller's "North" heading based on initHeading
+
+          drumHit:
+            Calculate if drum is hit
+*/
+
+
+
 #ifndef UF0_GYRO_h
 #define UF0_GYRO_h
 

@@ -1,4 +1,13 @@
 {
-    "idf.portWin": "COM7",
-    "idf.flashType": "UART"
+    "idf.portWin": "COM9",
+    "idf.flashType": "UART",
+    "cmake.sourceDirectory": "C:/Users/user/Documents/PlatformIO/Projects/UF0/.pio/libdeps/lolin32_lite/AsyncTCP",
+    "files.associations": {
+        "new": "cpp",
+        "regex": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "cstdlib": "cpp"
+    },
+    "git.ignoreLimitWarning": true
 }

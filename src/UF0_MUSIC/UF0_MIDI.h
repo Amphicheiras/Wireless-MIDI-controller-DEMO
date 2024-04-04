@@ -2,10 +2,11 @@
 #define UF0_MIDI_h
 
 // Preliminary
+  // MIDI state transmition (must be over BLACKMAGIC or undefined error)
+    bool pitchTransmit{true}, rollTransmit{true}, yawTransmit{true};
   // Enterprise
-    #include "UF0_GYRO.h"
-    // class UF0_GYRO;
-    UF0_GYRO *gyro;
+    #include "UF0_HARDWARE/UF0_GYRO.h"
+    #include "UF0_OS/UF0_BLACKMAGIC.h"
   // Wi-Fi
     #include <WiFi.h>
     #include <WiFiClient.h>
@@ -17,8 +18,6 @@
     #define MIDI_CC 176
   // Is connected to rtp session?
     bool isConnected{false};
-  // MIDI state transmition
-    bool pitchTransmit{true}, rollTransmit{true}, yawTransmit{true};
   // YRP After degrees2MIDI
     float pitchMIDI{0}, rollMIDI{0}, yawMIDI{0};
   // A MIDI Note buffer has 1 value
@@ -29,7 +28,6 @@
     int MIDIChordOn[12] = {0,0,0,0,0,0,0,0,0,0,0,0}, MIDIChordOff[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     int rootChord[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     int chordSize{12};
-    #include "UF0_BLACKMAGIC.h"
   // Timers
     unsigned long MIDI_t0 = millis();
 //
@@ -64,8 +62,7 @@ class UF0_MIDI{
 
     UF0_MIDI(){}
 
-    UF0_MIDI(UF0_GYRO *gyroo){
-      gyro = gyroo;
+    UF0_MIDI(bool goo){
       setup();
     }
     // enableMIDIControl?

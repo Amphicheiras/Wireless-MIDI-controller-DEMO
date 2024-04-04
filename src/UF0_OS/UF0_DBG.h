@@ -1,3 +1,7 @@
+/*
+    AppleMIDI Licenses & such
+*/
+
 #pragma once
 
 #ifdef UF0_DBG
