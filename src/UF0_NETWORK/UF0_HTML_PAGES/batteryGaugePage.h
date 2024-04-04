@@ -1,6 +1,6 @@
 #ifndef BATTERYGAUGEHTML_H
 #define BATTERYGAUGEHTML_H
-
+//
 const char* batteryGaugeHTML = R"=====(
 <!DOCTYPE html>
 <html>
