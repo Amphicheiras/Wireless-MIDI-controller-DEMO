@@ -1,11 +1,70 @@
+/* ````~~~~~~_____%%%%%%   Hi!    %%%%%%_____~~~~~~````
 
-This directory is intended for PlatformIO Test Runner and project tests.
+  What works:
+    Buttons
+      -
+    Triggerz
+      send MIDI note
+    Joystick*
+      Click (unasigned)
+    LED*
+    Gyro
+    Wi-Fi
+    Web Server**
+    MIDI over Wi-Fi
+    Preset Save/Load
+    Virtual Grid
+    Drum Hit
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+  What does'nt:
+    * needs testing
+    ** needs fixing
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+  TO - DOs:
+    v0.5:
+    
+      Plug in OS + Preset System
+
+      DBG freakin online battery display
+
+    v0.6:
+
+      try pairing!
+
+      add viber
+
+      UF0_HARDWARE.h -> UF0_HW_HANDLER +
+                     -> UF0_BUTTON +
+                     -> UF0_TRIGGER +
+                     -> UF0_LED +
+                     -> UF0_POWER +
+                     -> UF0_VIBER
+
+      try pico wifi HID -> try library for esp wifi HID?
+      solder + test joystick mouse with pico
+
+      virtualMIDI
+
+      option for On / Off the webServer when connecting to LAN
+      redirect from 192.168.4.1/ -> 192.168.1.158/jamm~! (in one button -> Connect!)
+
+    LED:
+      Ambient light presets
+      When saving preset blink LED & press continue?
+    HW:
+      WiFi Joystick HID mouse
+    Network:
+      design HTML
+      finish HTML API
+    MISC:
+      invent new notes! (name, freq/pitch)
+    MIDI:
+      UF0_MIDI extends AppleMIDI?
+    XRTS:
+      xtaskcreate -> loopbutton core 1 (task ex.)
+      task no affinity
+      semaphorez give/take
+    Shell + stuff:
+      TRANSLUCID MATERIAL FOR AMBIENT LIGHTNING
+      Controller Stand
+*/
