@@ -1,5 +1,5 @@
 {
-    "idf.portWin": "COM9",
+    "idf.portWin": "COM10",
     "idf.flashType": "UART",
     "cmake.sourceDirectory": "C:/Users/user/Documents/PlatformIO/Projects/UF0/.pio/libdeps/lolin32_lite/AsyncTCP",
     "files.associations": {

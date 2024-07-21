@@ -29,7 +29,9 @@
 
     v0.6:
 
-      try pairing!
+      try pairing! ~~~~ NO PAIRING! (FIGURE OUT PRESET SYSTEM)
+
+      FIGURE OUT GUI -- SW SITUATION
 
       add viber
 
@@ -40,12 +42,11 @@
                      -> UF0_POWER +
                      -> UF0_VIBER
 
-      try pico wifi HID -> try library for esp wifi HID?
-      solder + test joystick mouse with pico
+      esp wifi HID (mouse)
 
-      virtualMIDI
+      virtualMIDI????!!!??
 
-      option for On / Off the webServer when connecting to LAN
+      (On / Off) option for the webServer when connecting to LAN
       redirect from 192.168.4.1/ -> 192.168.1.158/jamm~! (in one button -> Connect!)
 
     LED:

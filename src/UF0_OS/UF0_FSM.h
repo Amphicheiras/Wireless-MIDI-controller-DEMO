@@ -18,7 +18,7 @@
     #include <Preferences.h>
   // Main DBG
     #define monitorActive true
-    #define monitorHz 5000000
+    #define monitorHz 50
   // SLEEP stuff
     #define BUTTON_ON_OFF_BITMASK 0x200000000 // 2^BUTTON_ON_OFF in hex (this case BUTTON_ON_OFF = 33)
     #define TIME_FOR_SLEEP 3000

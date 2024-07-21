@@ -5,7 +5,8 @@
   // MIDI state transmition (must be over BLACKMAGIC or undefined error)
     bool pitchTransmit{true}, rollTransmit{true}, yawTransmit{true};
   // Enterprise
-    #include "UF0_HARDWARE/UF0_GYRO.h"
+    // #include "UF0_HARDWARE/UF0_GYRO.h"
+    #include "UF0_HARDWARE/UF0_GYRO_ICM_20948.h"
     #include "UF0_OS/UF0_BLACKMAGIC.h"
   // Wi-Fi
     #include <WiFi.h>
@@ -97,11 +98,11 @@ class UF0_MIDI{
         MIDI.sendControlChange(MIDI_CC, pitchMIDI, 1);
       }
       if (rollTransmit){
-        rollMIDI = degrees2MIDI(roll, -90, 90, false, false);
+        rollMIDI = degrees2MIDI(roll, -90, 90, false, true);
         MIDI.sendControlChange(MIDI_CC, rollMIDI, 2);
       }
       if (yawTransmit){
-        yawMIDI = degrees2MIDI(yaw, -90, 90, true, false);
+        yawMIDI = degrees2MIDI(yaw, -90, 90, true, true);
         MIDI.sendControlChange(MIDI_CC, yawMIDI, 3);
       }
     }

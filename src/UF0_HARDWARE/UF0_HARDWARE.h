@@ -74,7 +74,7 @@
   // JOYSTICK
     #define JOYSTICK_Y  36  // ESP32 pin GPIO36 (ADC0) connected to VRX pin
     #define JOYSTICK_X  39 // ESP32 pin GPIO39 (ADC0) connected to VRY pin
-    #define JOYSTICK_CLICK   16 // ESP32 pin GPIO17 connected to SW  pin
+    #define JOYSTICK_CLICK   16 // ESP32 pin GPIO17 connected to SW pin
     ezButton button(JOYSTICK_CLICK);
     // Joystick values
     int joystickX, joystickY, joystickButton;
@@ -153,7 +153,7 @@ class UF0_BUTTON{
       }
     // Bang BUTTON_YAW_RESET:
       if (BUTTON_YAW_RESET_state == HIGH && BUTTON_YAW_RESET_state_past == LOW){
-        resetHeading();
+        // resetHeading();
       }
 
     // Update past btn states
@@ -200,9 +200,7 @@ class UF0_TRIGGER{
           if (TRIGGER_A_STATE == HIGH && TRIGGER_A_STATE_past == LOW){
           // Turn off previously played note, if any
           
-          // Update root MIDI Note On
-          
-          // Play root note
+            midii->sendMIDINoteOn(MIDINoteOn, 100, 5);
           
           }
         // Let T1:

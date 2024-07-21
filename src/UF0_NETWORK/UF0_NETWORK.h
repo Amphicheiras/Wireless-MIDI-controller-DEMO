@@ -116,24 +116,24 @@ void controlServerRequests(){
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
 
+  controlServer.on("/updateWiFi", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", (connected2WiFi ? "Connected to WiFi!" : "Not connected to WiFi"));
+  });
+
   controlServer.on("/startX", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("pitch transmit on:", pitchTransmit);
     midii->startTransmission(&pitchTransmit);
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
 
-  controlServer.on("/updateWiFi", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", (connected2WiFi ? "Connected to WiFi!" : "Not connected to WiFi"));
-  });
-
   controlServer.on("/startY", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    DBG("pitch transmit off:", rollTransmit);
+    DBG("roll transmit on:", rollTransmit);
     midii->startTransmission(&rollTransmit);
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
 
   controlServer.on("/startZ", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    DBG("pitch transmit off:", yawTransmit);
+    DBG("yaw transmit on:", yawTransmit);
     midii->startTransmission(&yawTransmit);
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
@@ -145,13 +145,13 @@ void controlServerRequests(){
   });
 
   controlServer.on("/stopY", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    DBG("pitch transmit off:", rollTransmit);
+    DBG("roll transmit off:", rollTransmit);
     midii->stopTransmission(&rollTransmit);
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
 
   controlServer.on("/stopZ", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    DBG("pitch transmit off:", yawTransmit);
+    DBG("yaw transmit off:", yawTransmit);
     midii->stopTransmission(&yawTransmit);
     request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
   });
@@ -207,8 +207,8 @@ void controlServerRequests(){
 void connectWiFi(AsyncWebServerRequest *request = NULL){
   // STA_ssid = request->arg("ssid");
   // STA_pass = request->arg("password");
-  STA_ssid = "Teles Mobile";
-  STA_pass = "987654321";
+  STA_ssid = "Oxo Fanarii";
+  STA_pass = "internet";
   DBG("Credentials entered: UN =", STA_ssid, "PW =", STA_pass);
 // Opening Station mode
   DBG(F("Initializing Wi-Fi station mode"));

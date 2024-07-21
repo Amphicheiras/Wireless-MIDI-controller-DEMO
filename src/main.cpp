@@ -21,7 +21,8 @@
     UF0_JOYSTICK joystickDriver;
     UF0_LED_handler ledHandler;
     UF0_POWER powerHandler;
-    UF0_GYRO gyroDriver;
+    UF0_GYRO_2 gyroDriver_2;
+    // UF0_GYRO gyroDriver;
     UF0_WiFi WiFiDriver;
     UF0_WEBSERVER serverDriver;
     UF0_MIDI midiDriver;
@@ -34,8 +35,8 @@ void setup(){
   delay(1000);
   DBG(F("===================== Das Booting ==================="));
   init();
-  DBG(F("===================== BOOT PRESETS ==================="));
-  UF0_PRESET_HANDLER presetHandler(true);
+  // DBG(F("===================== BOOT PRESETS ==================="));
+  // UF0_PRESET_HANDLER presetHandler(true);
   DBG(F("===================== BOOT BUTTONS ==================="));
   UF0_BUTTON buttonDriver(&midiDriver);
   DBG(F("===================== BOOT TRIGGERS ==================="));
@@ -51,10 +52,12 @@ void setup(){
   UF0_WEBSERVER serverDriver(&powerHandler, &midiDriver, &blackmagic);
   DBG(F("===================== BOOT WIFI ==================="));
   UF0_WiFi WiFiDriver(true);
-  DBG(F("===================== BOOT GYRO ==================="));
-  UF0_GYRO gyroDriver(true);
+  DBG(F("===================== BOOT ICM GYRO ==================="));
+  UF0_GYRO_2 gyroDriver_2(true);
+  // DBG(F("===================== BOOT GYRO ==================="));
+  // UF0_GYRO gyroDriver(true);
   DBG(F("===================== BOOT MIDI ==================="));
-  UF0_MIDI midiDriver(&gyroDriver);
+  UF0_MIDI midiDriver(true);
   DBG(F("===================== BOOT FSM ==================="));
   UF0_FSM fsmDriver(true);
   DBG(F("===================== BOOT BM ==================="));
@@ -67,13 +70,16 @@ void setup(){
 }
 
 void loop(){
-    presetHandler.loop();
-    buttonDriver.loop();
-    triggerDriver.loop();
-    joystickDriver.loop();
-    ledHandler.loop();
-    midiDriver.loop();
-    gyroDriver.loop();
-    fsmDriver.loop();
-    blackmagic.loop();
+  // presetHandler.loop();
+  buttonDriver.loop();
+  triggerDriver.loop();
+  joystickDriver.loop();
+  ledHandler.loop();
+  midiDriver.loop();
+  // this is ICM
+  gyroDriver_2.loop();
+  // this is BNO
+  // gyroDriver.loop();
+  fsmDriver.loop();
+  blackmagic.loop();
 }
