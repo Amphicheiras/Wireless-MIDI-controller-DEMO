@@ -2,7 +2,7 @@
 ** DEMO VIDEO: https://drive.google.com/file/d/1XsRHFkM4G59OaG00kbQT03Dq-mRu1x4l/view?usp=drive_link **
 ## 1. Introduction
 ### 1.0 Who am I, what is this?:
-
+I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is but a brief demo of our work without exposing the classified prototype ideas behind our bigger commercial projects.
 ### 1.1. Background on MIDI Technology:
 Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instru-
 ments, computers, and other devices to communicate. It has been a cornerstone in music production for
