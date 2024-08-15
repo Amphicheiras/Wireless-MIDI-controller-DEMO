@@ -12,11 +12,11 @@ environments.
 ### 1.3. Project Overview:
 The goal of this project was to develop a wireless MIDI controller using an ESP32 microcontroller,
 integrated with MIDI-OX and rtpMIDI over a Wi-Fi connection, powered by a rechargeable 18650
-battery. The controller features a web interface for remote control and integrates seamlessly with music production software like Ableton Live 11.
+battery. The controller features a web interface for remote control and integrates seamlessly with music production software like Ableton Live and other DAWs.
 ## 2. Components and Materials
 ### 2.1. ESP32 Microcontroller:
-Chosen for its Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing and wireless communication.
-### 2.2. 18650 Battery and Charging/Discharge Chip:
+Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing and wireless communication.
+### 2.2.  Li-Ion 18650 Battery and Charging/Discharge Chip:
 Provides portable power to the ESP32. The charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
 ### 2.3. ICM-20948 IMU:
