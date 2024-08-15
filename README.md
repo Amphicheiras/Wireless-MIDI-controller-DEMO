@@ -39,6 +39,7 @@ processor.
 ### 2.5. HTML Web Interface:
 A simple web page hosted on the ESP32 that allows users to control the MIDI controller remotely from
 a PC or smartphone. Basic controls like Play/Stop are available.
+![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/Webpage_-_Jam_the_object.png?raw=true)
 ## 3. Design and Implementation
 ### 3.1. Hardware Architecture:
 The ESP32 is connected to the ICM-20946 sensor and powered by the 18650 battery through the
