@@ -53,6 +53,7 @@
     bool BUTTON_SCALE_state, BUTTON_SCALE_state_past;
     bool BUTTON_CHORD_state, BUTTON_CHORD_state_past;
     bool BUTTON_ROOT_state, BUTTON_ROOT_state_past;
+    bool toggle_T3 = false;
   // BUTTON modeZ
     #define NO_MODE          -1
     #define ON_OFF_MODE       0
@@ -199,9 +200,7 @@ class UF0_TRIGGER{
         // Hold T1:
           if (TRIGGER_A_STATE == HIGH && TRIGGER_A_STATE_past == LOW){
           // Turn off previously played note, if any
-          
             midii->sendMIDINoteOn(MIDINoteOn, 100, 5);
-          
           }
         // Let T1:
           if (TRIGGER_A_STATE == LOW && TRIGGER_A_STATE_past == HIGH){
@@ -216,13 +215,20 @@ class UF0_TRIGGER{
           if (TRIGGER_B_STATE == LOW && TRIGGER_B_STATE_past == HIGH){
             midii->disableControl();
           }
-        // Hold TF:
+        // Toggle TF:
           if (TRIGGER_C_STATE == HIGH && TRIGGER_C_STATE_past == LOW){
-            // open function
+            toggle_T3 = !toggle_T3;
+            if (toggle_T3){
+              midii->toggle_T3_on();
+            }
+            else{
+              midii->toggle_T3_off();
+            }
           }
-        // Let TF:
+        // Toggle TF:
           if (TRIGGER_C_STATE == LOW && TRIGGER_C_STATE_past == HIGH){
             // close function
+            // midii->sendMIDINoteOff(MIDINoteOn, 100, 5);
           }
           break;
         //////////////// S O L O   M O D E ///////////////

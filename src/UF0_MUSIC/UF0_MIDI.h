@@ -6,7 +6,7 @@
     bool pitchTransmit{true}, rollTransmit{true}, yawTransmit{true};
   // Enterprise
     // #include "UF0_HARDWARE/UF0_GYRO.h"
-    #include "UF0_HARDWARE/UF0_GYRO_ICM_20948.h"
+    #include "UF0_HARDWARE/UF0_GYRO.h"
     #include "UF0_OS/UF0_BLACKMAGIC.h"
   // Wi-Fi
     #include <WiFi.h>
@@ -31,6 +31,7 @@
     int chordSize{12};
   // Timers
     unsigned long MIDI_t0 = millis();
+    bool controlsActive = false;
 //
 
 class UF0_MIDI{
@@ -68,11 +69,11 @@ class UF0_MIDI{
     }
     // enableMIDIControl?
     void enableControl(){
-      //
+      controlsActive = true;
     }
 
     void disableControl(){
-      //
+      controlsActive = false;
     }
 
     // Drum hit gesture
@@ -91,7 +92,13 @@ class UF0_MIDI{
     void loop(){
     // Listen to incoming notes
       MIDI.read();
-      drumHitMIDI();
+      // drumHitMIDI();
+      if (controlsActive){
+        sendControls();
+      }
+    }
+
+    void sendControls(){
     // Transmit YPR
       if (pitchTransmit){
         pitchMIDI = degrees2MIDI(pitch, -90, 90, false, false);
@@ -117,6 +124,14 @@ class UF0_MIDI{
       for (int i=0; i<sizeof(inMIDIChord); i++){
         MIDI.sendNoteOff(inMIDIChord[i], inVelocity, inChannel);
       }
+    }
+
+    void toggle_T3_on(){
+        MIDI.sendControlChange(MIDI_CC, 127, 15);
+    }
+
+    void toggle_T3_off(){
+        MIDI.sendControlChange(MIDI_CC, 0, 15);
     }
 
     void startTransmission(bool* toStart){

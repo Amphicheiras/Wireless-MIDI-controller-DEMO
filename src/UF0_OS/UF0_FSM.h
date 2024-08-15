@@ -5,7 +5,6 @@
   // Enterprise
     #include "UF0_MUSIC/UF0_MIDI.h"
     #include "UF0_HARDWARE/UF0_GYRO.h"
-    #include "UF0_MUSIC/UF0_PRESET_SYSTEM.h"
   // I2C
     #include <Wire.h>
   // I2C Pins for Lolin32 Lite
@@ -18,7 +17,7 @@
     #include <Preferences.h>
   // Main DBG
     #define monitorActive true
-    #define monitorHz 50
+    #define monitorHz 200
   // SLEEP stuff
     #define BUTTON_ON_OFF_BITMASK 0x200000000 // 2^BUTTON_ON_OFF in hex (this case BUTTON_ON_OFF = 33)
     #define TIME_FOR_SLEEP 3000

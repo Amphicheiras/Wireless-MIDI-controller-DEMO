@@ -33,8 +33,7 @@
     #include <ESPAsyncWebServer.h>
   // Web pages (HTML)
     #include "UF0_HTML_PAGES\credentialsPage.h"
-    #include "UF0_HTML_PAGES\presetsPage.h"
-    #include "UF0_HTML_PAGES\batteryGaugePage.h"
+    #include "UF0_HTML_PAGES\transmitGyroPage.h"
     
   // AP preliminary
     char AP_ssid[50];
@@ -94,13 +93,6 @@ void controlServerRequests(){
     // request->send_P(200, "text/html", credentialsHTML, HTMLprocessor);
   });
   
-  controlServer.on("/battery", HTTP_GET, [](AsyncWebServerRequest *request){
-    // int temp = pwr->get_battery_percent();
-    float temp = millis();
-    String batteryStr = String(temp, 2);
-    request->send_P(200, "text/html", batteryGaugeHTML, HTMLprocessor);
-  });
-  
   controlServer.on("/connect", HTTP_GET, [](AsyncWebServerRequest *request){
     // connectWiFi(request);
   });
@@ -113,7 +105,7 @@ void controlServerRequests(){
   });
   
   controlServer.on("/jam", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/updateWiFi", HTTP_GET, [] (AsyncWebServerRequest *request) {
@@ -123,72 +115,72 @@ void controlServerRequests(){
   controlServer.on("/startX", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("pitch transmit on:", pitchTransmit);
     midii->startTransmission(&pitchTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/startY", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("roll transmit on:", rollTransmit);
     midii->startTransmission(&rollTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/startZ", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("yaw transmit on:", yawTransmit);
     midii->startTransmission(&yawTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/stopX", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("pitch transmit off:", pitchTransmit);
     midii->stopTransmission(&pitchTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/stopY", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("roll transmit off:", rollTransmit);
     midii->stopTransmission(&rollTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/stopZ", HTTP_GET, [] (AsyncWebServerRequest *request) {
     DBG("yaw transmit off:", yawTransmit);
     midii->stopTransmission(&yawTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/soloX", HTTP_GET, [] (AsyncWebServerRequest *request) {
     midii->soloTransmission(&pitchTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/soloY", HTTP_GET, [] (AsyncWebServerRequest *request) {
     midii->soloTransmission(&rollTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/soloZ", HTTP_GET, [] (AsyncWebServerRequest *request) {
     midii->soloTransmission(&yawTransmit);
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/enableAll", HTTP_GET, [] (AsyncWebServerRequest *request) {
     midii->startTransmissionAll();
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/disableAll", HTTP_GET, [] (AsyncWebServerRequest *request) {
     midii->stopTransmissionAll();
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/save", HTTP_GET, [] (AsyncWebServerRequest *request) {
     bm->savePreset();
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/load", HTTP_GET, [] (AsyncWebServerRequest *request) {
     bm->loadPreset();
-    request->send_P(200, "text/html", presetsHTML, HTMLprocessor);
+    request->send_P(200, "text/html", transmitGyroHTML, HTMLprocessor);
   });
 
   controlServer.on("/updateX", HTTP_GET, [] (AsyncWebServerRequest *request) {
