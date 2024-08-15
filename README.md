@@ -4,9 +4,7 @@
 ### 1.0 Who am I, what is this?:
 I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is but a brief demo of our work without exposing the classified prototype ideas behind our bigger commercial projects.
 ### 1.1. Background on MIDI Technology:
-Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instru-
-ments, computers, and other devices to communicate. It has been a cornerstone in music production for
-decades.
+Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instruments, computers, and other devices to communicate. It has been a cornerstone in music production for decades.
 ### 1.2. Need for Wireless MIDI Controllers:
 Traditional wired MIDI setups can be cumbersome, limiting mobility and cluttering performance spaces.
 A wireless solution increases flexibility and ease of use, especially in live performances and studio
@@ -14,12 +12,10 @@ environments.
 ### 1.3. Project Overview:
 The goal of this project was to develop a wireless MIDI controller using an ESP32 microcontroller,
 integrated with MIDI-OX and rtpMIDI over a Wi-Fi connection, powered by a rechargeable 18650
-battery. The controller features a web interface for remote control and integrates seamlessly with music
-production software like Ableton Live 11.
+battery. The controller features a web interface for remote control and integrates seamlessly with music production software like Ableton Live 11.
 ## 2. Components and Materials
 ### 2.1. ESP32 Microcontroller:
-Chosen for its Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the
-heart of the controller, handling all MIDI signal processing and wireless communication.
+Chosen for its Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing and wireless communication.
 ### 2.2. 18650 Battery and Charging/Discharge Chip:
 Provides portable power to the ESP32. The charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
@@ -28,8 +24,7 @@ A 9-axis motion sensor used for detecting gestures or movements that can be mapp
 Serial connection with I2C
 ### 2.4. Software Tools:
 #### 2.4.1. VS Code with PlatformIO:
-Integrated development environment used for writing, testing, and deploying code to the ESP32. Plat-
-formIO libraries were used to manage ESP32 and MIDI functionalities. Below is the OOP abstract structure of the source code.
+Integrated development environment used for writing, testing, and deploying code to the ESP32. PlatformIO libraries were used to manage ESP32 and MIDI functionalities. Below is the OOP abstract structure of the source code.
 The uploaded source code contains code parts from the bigger cousin-project of this demo which was being developed for commercial use.
 
 ![src_structure](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/src_structure.png?raw=true)
