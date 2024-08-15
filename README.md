@@ -46,7 +46,8 @@ a PC or smartphone. Basic controls like Play/Stop are available.
 ### 3.1. Hardware Architecture:
 The ESP32 is connected to the ICM-20946 sensor and powered by the 18650 battery through the
 charging/discharge chip. A schematic diagram can illustrate the connections, with particular attention
-to the ESP32 pinout.
+to the ESP32 pinout as shown below.
+![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/ESP32_pinout.png?raw=true)
 ### 3.2. Circuit Design:
 The circuit integrates the battery, ESP32, and sensor, ensuring stable power delivery and effective signal
 processing.
