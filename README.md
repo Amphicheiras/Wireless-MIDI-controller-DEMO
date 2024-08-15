@@ -4,33 +4,33 @@
 Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instru-
 ments, computers, and other devices to communicate. It has been a cornerstone in music production for
 decades.
-1.2. Need for Wireless MIDI Controllers:
+### 1.2. Need for Wireless MIDI Controllers:
 Traditional wired MIDI setups can be cumbersome, limiting mobility and cluttering performance spaces.
 A wireless solution increases flexibility and ease of use, especially in live performances and studio
 environments.
-1.3. Project Overview:
+### 1.3. Project Overview:
 The goal of this project was to develop a wireless MIDI controller using an ESP32 microcontroller,
 integrated with MIDI-OX and rtpMIDI over a Wi-Fi connection, powered by a rechargeable 18650
 battery. The controller features a web interface for remote control and integrates seamlessly with music
 production software like Ableton Live 11.
-2. Components and Materials
-2.1. ESP32 Microcontroller:
+## 2. Components and Materials
+### 2.1. ESP32 Microcontroller:
 Chosen for its Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the
 heart of the controller, handling all MIDI signal processing and wireless communication.
-2.2. 18650 Battery and Charging/Discharge Chip:
+### 2.2. 18650 Battery and Charging/Discharge Chip:
 Provides portable power to the ESP32. The charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
-2.3. ICM-20948 IMU:
+### 2.3. ICM-20948 IMU:
 A 9-axis motion sensor used for detecting gestures or movements that can be mapped to MIDI controls.
 Serial connection with I2C
-2.4. Software Tools:
-2.4.1. VS Code with PlatformIO:
+### 2.4. Software Tools:
+#### 2.4.1. VS Code with PlatformIO:
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Plat-
 formIO libraries were used to manage ESP32 and MIDI functionalities.
-2.4.2. Ableton Live 11:
+#### 2.4.2. Ableton Live 11:
 Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like "MIDI
 klp"were created to interface with the controller.
-2.4.3. rtpMIDI:
+#### 2.4.3. rtpMIDI:
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
 to computers.
 1
