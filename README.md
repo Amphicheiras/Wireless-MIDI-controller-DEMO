@@ -105,7 +105,6 @@ detects the press and release events to send corresponding MIDI messages.
 Functionality: Similar to Trigger 1 but mapped to a MIDI control change (CC) message instead of a note.
 Implementation: Assign a specific MIDI CC number to this trigger. It sends a value of 127 when pressed
 and 0 when released.
-3
 ### 9.3. Trigger 3: Play/Stop Function (Toggle)
 Functionality: Toggles a MIDI function on/off with each press, rather than holding it. Implementation:
 The firmware keeps track of the toggle state and sends corresponding MIDI messages each time the
