@@ -33,6 +33,8 @@ formIO libraries were used to manage ESP32 and MIDI functionalities. Below is th
 #### 2.4.2. Ableton Live 11:
 Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like the one shown below were created to interface with the controller.
 ![MIDI_mappings](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/MIDI_mappings.png?raw=true)
+![preset_initial_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_initial.png)
+![preset_random_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_random_position.png)
 #### 2.4.3. rtpMIDI:
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
 to computers.
@@ -48,7 +50,7 @@ a PC or smartphone. Basic controls like Play/Stop are available.
 The ESP32 is connected to the ICM-20946 sensor and powered by the 18650 battery through the
 charging/discharge chip. A schematic diagram can illustrate the connections, with particular attention
 to the ESP32 pinout as shown below.
-![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/ESP32_pinout.png?raw=true)
+![ESP32_pinout](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/ESP32_pinout.png?raw=true)
 ### 3.2. Circuit Design:
 The circuit integrates the battery, ESP32, and sensor, ensuring stable power delivery and effective signal
 processing.
