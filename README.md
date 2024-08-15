@@ -28,12 +28,11 @@ Serial connection with I2C
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Plat-
 formIO libraries were used to manage ESP32 and MIDI functionalities.
 #### 2.4.2. Ableton Live 11:
-Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like "MIDI
-klp"were created to interface with the controller.
+Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like the one shown below were created to interface with the controller.
+![MIDI_mappings](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/MIDI_mappings.png?raw=true)
 #### 2.4.3. rtpMIDI:
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
 to computers.
-![alt text](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/MIDI_mappings.png?raw=true)
 #### 2.4.4. MIDI-OX:
 Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI debugger and signal
 processor.
