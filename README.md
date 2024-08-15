@@ -34,74 +34,74 @@ klp"were created to interface with the controller.
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
 to computers.
 1
-2.4.4. MIDI-OX:
+#### 2.4.4. MIDI-OX:
 Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI debugger and signal
 processor.
-2.5. HTML Web Interface:
+### 2.5. HTML Web Interface:
 A simple web page hosted on the ESP32 that allows users to control the MIDI controller remotely from
 a PC or smartphone. Basic controls like Play/Stop are available.
-3. Design and Implementation
-3.1. Hardware Architecture:
+## 3. Design and Implementation
+### 3.1. Hardware Architecture:
 The ESP32 is connected to the ICM-20946 sensor and powered by the 18650 battery through the
 charging/discharge chip. A schematic diagram can illustrate the connections, with particular attention
 to the ESP32 pinout.
-3.2. Circuit Design:
+### 3.2. Circuit Design:
 The circuit integrates the battery, ESP32, and sensor, ensuring stable power delivery and effective signal
 processing.
-3.3. Firmware Development:
+### 3.3. Firmware Development:
 Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corres-
 ponding MIDI signals via Wi-Fi. Libraries like KWDIKAS facilitated the MIDI communication.
-3.4. Wi-Fi Configuration:
+### 3.4. Wi-Fi Configuration:
 The ESP32 connects to a local Wi-Fi network and communicates with rtpMIDI on a designated IP
 address, enabling the wireless transmission of MIDI data.
-4. Software Integration
-4.1. MIDI-OX Setup:
+## 4. Software Integration
+### 4.1. MIDI-OX Setup:
 Step-by-step guide to installing and configuring MIDI-OX for monitoring and routing MIDI data.
-4.2. Configuring rtpMIDI:
+### 4.2. Configuring rtpMIDI:
 Instructions on setting up rtpMIDI, assigning IP addresses, and ensuring a stable connection between
 the ESP32 and computer.
-4.3. Ableton Live 11 Integration:
+### 4.3. Ableton Live 11 Integration:
 Details on how the MIDI controller was integrated with Ableton Live, including loading the "MIDI
 klp"preset and mapping triggers to specific functions.
-5. Testing and Results
-5.1. Performance Metrics:
+## 5. Testing and Results
+### 5.1. Performance Metrics:
 Latency measurements, range tests, and overall reliability of the wireless connection.
 2
-5.2. Battery Life:
+### 5.2. Battery Life:
 Testing the duration and efficiency of the 18650 battery under different operating conditions.
-5.3. Web Interface Testing:
+### 5.3. Web Interface Testing:
 Evaluating the responsiveness and usability of the HTML web page for remote control.
-6. Challenges and Solutions
-6.1. Connectivity Issues:
+## 6. Challenges and Solutions
+### 6.1. Connectivity Issues:
 Encountered occasional Wi-Fi dropouts. Solutions included optimizing the Wi-Fi configuration and
 testing in different environments.
-6.2. Power Management:
+### 6.2. Power Management:
 Managing power consumption to extend battery life while maintaining performance. Implemented power-
 saving modes and optimized code to reduce CPU load.
-7. Conclusion
-7.1. Project Recap:
+## 7. Conclusion
+### 7.1. Project Recap:
 The wireless MIDI controller successfully achieved its goals, providing a flexible and portable solution
 for musicians and producers.
-7.2. Potential Improvements:
+### 7.2. Potential Improvements:
 Exploring additional triggers, integrating more sensors, or expanding the web interface with more con-
 trols.
-7.3. Future Work:
+### 7.3. Future Work:
 Possible developments include expanding the range of the controller, integrating with more DAWs, or
 adding Bluetooth support.
-8. References
-8.1. Citations:
+## 8. References
+### 8.1. Citations:
 List of any technical papers, tutorials, or online resources consulted during the project.
-9. Trigger Functions and Implementation Details
-9.1. Trigger 1: Play/Stop Note (Hold)
+## 9. Trigger Functions and Implementation Details
+### 9.1. Trigger 1: Play/Stop Note (Hold)
 Functionality: Sends a MIDI note-on message when pressed and holds the note. When released, it sends
 a MIDI note-off message. Implementation: Use a button or sensor connected to a GPIO pin. The firmware
 detects the press and release events to send corresponding MIDI messages.
-9.2. Trigger 2: Play/Stop Control (Hold)
+### 9.2. Trigger 2: Play/Stop Control (Hold)
 Functionality: Similar to Trigger 1 but mapped to a MIDI control change (CC) message instead of a note.
 Implementation: Assign a specific MIDI CC number to this trigger. It sends a value of 127 when pressed
 and 0 when released.
 3
-9.3. Trigger 3: Play/Stop Function (Toggle)
+### 9.3. Trigger 3: Play/Stop Function (Toggle)
 Functionality: Toggles a MIDI function on/off with each press, rather than holding it. Implementation:
 The firmware keeps track of the toggle state and sends corresponding MIDI messages each time the
 trigger is activated
