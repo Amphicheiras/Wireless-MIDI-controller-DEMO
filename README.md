@@ -1,8 +1,6 @@
 # UF0 - A wireless MIDI adventure
-========= 
-
-1. Introduction
-1.1. Background on MIDI Technology:
+## 1. Introduction
+### 1.1. Background on MIDI Technology:
 Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instru-
 ments, computers, and other devices to communicate. It has been a cornerstone in music production for
 decades.
