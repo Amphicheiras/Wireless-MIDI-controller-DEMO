@@ -15,17 +15,17 @@ integrated with MIDI-OX and rtpMIDI over a Wi-Fi connection, powered by a rechar
 battery. The controller features a web interface for remote control and integrates seamlessly with music production software like Ableton Live and other DAWs.
 ## 2. Components and Materials
 ### 2.1. ESP32 Microcontroller:
-Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing and wireless communication.
+Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing, RTOS and wireless communication.
 ### 2.2.  Li-Ion 18650 Battery and Charging/Discharge Chip:
-Provides portable power to the ESP32. The charging chip ensures the battery is safely charged and
+Provides portable power to the ESP32. The (dis)charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
 ### 2.3. ICM-20948 IMU:
 A 9-axis motion sensor used for detecting gestures or movements that can be mapped to MIDI controls.
 Serial connection with I2C
 ### 2.4. Software Tools:
 #### 2.4.1. VS Code with PlatformIO:
-Integrated development environment used for writing, testing, and deploying code to the ESP32. PlatformIO libraries were used to manage ESP32 and MIDI functionalities. Below is the OOP abstract structure of the source code.
-The uploaded source code contains code parts from the bigger cousin-project of this demo which was being developed for commercial use.
+Integrated development environment used for writing, testing, and deploying code to the ESP32. Various libraries imported through PlatformIO were used to manage ESP32, IMU and MIDI functionalities. Below is the OOP abstract structure of the source code.
+~The uploaded source code might still contain some code fragments from the bigger cousin-project of this demo which was being developed for commercial use.~
 
 ![src_structure](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/src_structure.png?raw=true)
 #### 2.4.2. Ableton Live 11:
@@ -34,14 +34,13 @@ Digital Audio Workstation used for testing and integrating the MIDI controller. 
 ![preset_initial_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_initial.png)
 ![preset_random_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_random_position.png)
 #### 2.4.3. rtpMIDI:
-Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
-to computers.
+Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages over Wi-Fi connections.
 #### 2.4.4. MIDI-OX:
 Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI debugger and signal
 processor.
 ### 2.5. HTML Web Interface:
 A simple web page hosted on the ESP32 that allows users to control the MIDI controller remotely from
-a PC or smartphone. Basic controls like Play/Stop are available.
+a PC, a smartphone, basically any device that can operate a web browser. Basic controls like MIDI transmition Play/Stop/Solo are available.
 ![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/Webpage_-_Jam_the_object.png?raw=true)
 ## 3. Design and Implementation
 ### 3.1. Hardware Architecture:
@@ -75,11 +74,11 @@ klp"preset and mapping triggers to specific functions.
 ## 5. Testing and Results
 ### 5.1. Performance Metrics:
 #### Latency:
-The latency is impressive, staying below 20ms, which allows for precise playing, even at 16th-note rhythms. However, this can vary depending on the use of latency-inducing instruments, VSTs, or an increase in audio buffer size.
+The latency is impressively low, staying under 20ms, which allows for precise playing, even at 16th-note rhythms. However, this can vary depending on the use of latency-inducing instruments, VSTs, or an increase in audio buffer size.
 #### Range:
-The range is virtually limitless for anyone connected to the same LAN, regardless of their physical location, allowing them to interact with your Ableton settings. The ESP32's Wi-Fi range itself extends over 5 meters. I can move to the floor below the router while playing the controller, and the connection remains seamless with my Ableton presets. The ESP32, combined with rtpMIDI, provides a strong and stable Wi-Fi connection with no packet loss.
+The range is virtually limitless for anyone connected to the same LAN, regardless of their physical location, allowing them to interact with your Ableton settings. The ESP32's Wi-Fi range itself extends over 5 meters. One can move to the floor below the router while playing the controller, and the connection remains seamless with the Ableton presets. The ESP32, combined with rtpMIDI, provides a strong and stable Wi-Fi connection with no packet loss.
 ### 5.2. Battery Life:
-Testing the duration and efficiency of the 18650 battery under different operating conditions.
+A 3500mAh 18650 type Li-Ion is more than enough to supply the controller for a 8 hour jamming session.
 ### 5.3. Web Interface Testing:
 Evaluating the responsiveness and usability of the HTML web page for remote control.
 ## 6. Challenges and Solutions
