@@ -27,7 +27,6 @@ Serial connection with I2C
 #### 2.4.1. VS Code with PlatformIO:
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Plat-
 formIO libraries were used to manage ESP32 and MIDI functionalities. Below is the OOP abstract structure of the source code.
-
 ![src_structure](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/src_structure.png?raw=true)
 #### 2.4.2. Ableton Live 11:
 Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like the one shown below were created to interface with the controller.
@@ -51,6 +50,11 @@ to the ESP32 pinout as shown below.
 ### 3.2. Circuit Design:
 The circuit integrates the battery, ESP32, and sensor, ensuring stable power delivery and effective signal
 processing.
+![controller_east_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_east_view.jpg)
+![controller_inside_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view.jpg)
+![controller_inside_view_2](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view_2.jpg)
+![controller_northwest_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_northwest_view.jpg)
+![controller_rear_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_rear_view.jpg)
 ### 3.3. Firmware Development:
 Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corres-
 ponding MIDI signals via Wi-Fi. Libraries like KWDIKAS facilitated the MIDI communication.
