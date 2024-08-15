@@ -68,8 +68,10 @@ Details on how the MIDI controller was integrated with Ableton Live, including l
 klp"preset and mapping triggers to specific functions.
 ## 5. Testing and Results
 ### 5.1. Performance Metrics:
-Latency measurements, range tests, and overall reliability of the wireless connection.
-2
+#### Latency:
+The latency is impressive, staying below 20ms, which allows for precise playing, even at 16th-note rhythms. However, this can vary depending on the use of latency-inducing instruments, VSTs, or an increase in audio buffer size.
+#### Range:
+The range is virtually limitless for anyone connected to the same LAN, regardless of their physical location, allowing them to interact with your Ableton settings. The ESP32's Wi-Fi range itself extends over 5 meters. I can move to the floor below the router while playing the controller, and the connection remains seamless with my Ableton presets. The ESP32, combined with rtpMIDI, provides a strong and stable Wi-Fi connection with no packet loss.
 ### 5.2. Battery Life:
 Testing the duration and efficiency of the 18650 battery under different operating conditions.
 ### 5.3. Web Interface Testing:
