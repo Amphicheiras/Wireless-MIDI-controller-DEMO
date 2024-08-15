@@ -115,3 +115,5 @@ and 0 when released.
 Functionality: Toggles a MIDI function on/off with each press, rather than holding it. Implementation:
 The firmware keeps track of the toggle state and sends corresponding MIDI messages each time the
 trigger is activated
+## Hardware Runtime Tests
+### A sum of test scripts for testing & debugging  hardware components. (to be uploaded)
