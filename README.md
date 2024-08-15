@@ -28,6 +28,7 @@ Serial connection with I2C
 #### 2.4.1. VS Code with PlatformIO:
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Plat-
 formIO libraries were used to manage ESP32 and MIDI functionalities. Below is the OOP abstract structure of the source code.
+The uploaded source code contains code parts from the bigger cousin-project of this demo which was being developed for commercial use.
 
 ![src_structure](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/src_structure.png?raw=true)
 #### 2.4.2. Ableton Live 11:
