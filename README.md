@@ -33,7 +33,7 @@ klp"were created to interface with the controller.
 #### 2.4.3. rtpMIDI:
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages wirelessly
 to computers.
-![alt text](https://github.com/[amphicheiras]/[Wireless-MIDI-controller-demo]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/MIDI mappings.jpg?raw=true)
 #### 2.4.4. MIDI-OX:
 Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI debugger and signal
 processor.
