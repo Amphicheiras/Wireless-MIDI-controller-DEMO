@@ -38,7 +38,7 @@ Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI 
 processor.
 ### 2.5. HTML Web Interface:
 A simple HTML web page is hosted on the ESP32 allowing users to control the MIDI controller remotely from
-a PC, a smartphone, basically any device that can operate a web browser. Basic controls like MIDI transmition play, stop, and solo are available.
+a PC, a smartphone, basically any device that can operate a web browser. Controls like MIDI transmition play, stop, and solo are available and also an option so save the current, or load the last MIDI configuration.
 ![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/Webpage_-_Jam_the_object.png?raw=true)
 ## 3. Design and Implementation
 ### 3.1. Hardware Architecture:
