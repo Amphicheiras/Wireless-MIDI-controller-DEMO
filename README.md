@@ -51,10 +51,10 @@ to the ESP32 pinout as shown below.
 The circuit integrates the battery, ESP32, and sensor, ensuring stable power delivery and effective signal
 processing.
 ![controller_east_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_east_view.jpg)
-![controller_inside_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view.jpg)
-![controller_inside_view_2](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view_2.jpg)
 ![controller_northwest_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_northwest_view.jpg)
 ![controller_rear_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_rear_view.jpg)
+![controller_inside_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view.jpg)
+![controller_inside_view_2](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_inside_view_2.jpg)
 ### 3.3. Firmware Development:
 Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corresponding 
 MIDI signals via Wi-Fi. Libraries like AppleMIDI facilitated the MIDI communication.
