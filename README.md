@@ -14,30 +14,37 @@ A wireless solution increases flexibility and ease of use, especially in live pe
 The goal of this project was to develop a wireless MIDI controller using an ESP32 microcontroller, integrated with MIDI-OX and rtpMIDI over a Wi-Fi connection, powered by a rechargeable 18650 battery.
 The controller features a web interface for remote control and integrates seamlessly with music production software like Ableton Live and other DAWs.
 ## 2. Components and Materials
-### 2.1. ESP32 Microcontroller:
+### 2.0. Market Research and Cost:
+As a DIY project, I aimed for budget friendly solutions, at least for the research part, there werent many compromises regarding component quality, and where it really mattered, there was no compromise at all (ICM-20948 chip).
+### 2.1 Caseing:
+For the sake of this demo I crafted a carton caseing to hold the hardware together. This is a temporal solution.
+For the bigger projects, there are 3D files for 3D printed caseings which unfortunately have not been printed yet.
+### 2.2. ESP32 Microcontroller:
 Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing, RTOS and wireless communication.
-### 2.2.  Li-Ion 18650 Battery and Charging/Discharge Chip:
+### 2.3. Li-Ion 18650 Battery and Charging/Discharge Chip:
 Provides portable power to the ESP32. The (dis)charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
-### 2.3. ICM-20948 IMU:
+### 2.4. ICM-20948 IMU:
 A 9-axis motion sensor connected via I2C serial connection, used for detecting gestures or movements that can be mapped to MIDI controls.
-### 2.4. Software Tools:
-#### 2.4.1. VS Code with PlatformIO:
+### 2.5 Other Hardware:
+Other passive hardware such as buttons, LEDs, vibrators, etc. There is code for the bigger projects that already integrates these components.
+### 2.6. Software Tools:
+#### 2.6.1. VS Code with PlatformIO:
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Various libraries imported through PlatformIO were used to manage ESP32, IMU and MIDI functionalities. Below is the OOP abstract structure of the source code.
 The uploaded source code might still contain some code fragments from the bigger cousin-project of this demo which is being developed for commercial use.
 
 ![src_structure](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/src_structure.png?raw=true)
-#### 2.4.2. Ableton Live 11:
+#### 2.6.2. Ableton Live 11:
 Digital Audio Workstation used for testing and integrating the MIDI controller. Custom presets like the one shown below were created to interface with the controller.
 ![MIDI_mappings](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/MIDI_mappings.png?raw=true)
 ![preset_initial_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_initial.png)
 ![preset_random_position](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/preset_random_position.png)
-#### 2.4.3. rtpMIDI:
+#### 2.6.3. rtpMIDI:
 Enables MIDI communication over IP networks, allowing the ESP32 to send MIDI messages over Wi-Fi connections.
-#### 2.4.4. MIDI-OX:
+#### 2.6.4. MIDI-OX:
 Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI debugger and signal
 processor.
-### 2.5. HTML Web Interface:
+### 2.7. HTML Web Interface:
 A simple HTML web page is hosted on the ESP32 allowing users to control the MIDI controller remotely from
 a PC, a smartphone, basically any device that can operate a web browser. Controls like MIDI transmition play, stop, and solo are available and also an option so save the current, or load the last MIDI configuration.
 ![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/Webpage_-_Jam_the_object.png?raw=true)
