@@ -55,45 +55,39 @@ processing.
 ![controller_northwest_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_northwest_view.jpg)
 ![controller_rear_view](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/controller_rear_view.jpg)
 ### 3.3. Firmware Development:
-Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corres-
-ponding MIDI signals via Wi-Fi. Libraries like KWDIKAS facilitated the MIDI communication.
+Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corresponding 
+MIDI signals via Wi-Fi. Libraries like AppleMIDI facilitated the MIDI communication.
 ### 3.4. Wi-Fi Configuration:
-The ESP32 connects to a local Wi-Fi network and communicates with rtpMIDI on a designated IP
-address, enabling the wireless transmission of MIDI data.
+If the ESP32 cannot connect to a WiFi network, it starts in WiFi setup mode. In this mode it acts as a router in which one must connect to the device and enter the network's credential for the controller to connect to. Once the correct credentials are entered the controller connects to the Wifi network with automatic IP address assignment. Then the ESP32 communicates with rtpMIDI on its designated IP address, enabling the wireless transmission of MIDI data.
 ## 4. Software Integration
-### 4.1. MIDI-OX Setup:
-Step-by-step guide to installing and configuring MIDI-OX for monitoring and routing MIDI data.
-### 4.2. Configuring rtpMIDI:
-Instructions on setting up rtpMIDI, assigning IP addresses, and ensuring a stable connection between
+### 4.1. Configuring rtpMIDI:
+To use the rtpMIDI you must first create a session for your computer, then create a directory which contains the controller's info such as Name, IP-address and Port and then just press the connect button. The rtpMIDI has a built in latency gauge but I find it is not very precise since is measures the latency based on the signals transmitted from the controller, so if the actual latency is for example 50ms but a MIDI signal is transmitted every 1000ms then the latency gauge will write 1000ms.
 the ESP32 and computer.
-### 4.3. Ableton Live 11 Integration:
-Details on how the MIDI controller was integrated with Ableton Live, including loading presets and mapping triggers to specific functions.
+### 4.2. Ableton Live 11 Integration:
+Using AppleMIDI, the controller can behave as a MIDI device. Then, on the Ableton settings I use a MackeControl surface with input from the computer's rtpMIDI session created in the previous step. Then, Ableton can see the MIDI signals from every MIDI channel the controller is transmitting. Then one can map each MIDI CC from the different channels in whatevere parameter he likes using the MIDI Mappings editor in Ableton. After you setup your mappings you can just save the project and the mappings will load automatically when loading the project.
 ## 5. Testing and Results
 ### 5.1. Performance Metrics:
 #### Latency:
-The latency is impressively low, staying under 20ms, which allows for precise playing, even at 16th-note rhythms. However, this can vary depending on the use of latency-inducing instruments, VSTs, or an increase in audio buffer size.
+The latency is impressively low, staying under 20ms, which allows for precise playing, even at 16th-note rhythms. However, this can vary depending on the use of latency-inducing VSTs, or increased audio buffer size.
 #### Range:
 The range is virtually limitless for anyone connected to the same LAN, regardless of their physical location, allowing them to interact with your Ableton settings. The ESP32's Wi-Fi range itself extends over 5 meters. One can move to the floor below the router while playing the controller, and the connection remains seamless with the Ableton presets. The ESP32, combined with rtpMIDI, provides a strong and stable Wi-Fi connection with no packet loss.
 ### 5.2. Battery Life:
 A 3500mAh 18650 type Li-Ion is more than enough to supply the controller for a 8 hour jamming session.
 ### 5.3. Web Interface Testing:
-Evaluating the responsiveness and usability of the HTML web page for remote control.
+The webpage intercommunication is seamless and stable.
 ## 6. Challenges and Solutions
 ### 6.1. Connectivity Issues:
-Encountered occasional Wi-Fi dropouts. Solutions included optimizing the Wi-Fi configuration and
-testing in different environments.
+One sort of an issue is that when a device occupies the IP address of the controller's last session, then the controller will assign itself a different IP address. Then you will have no way of getting that address and you will have to setup the connection again. There is research on working around this issue. Since minimum latency is required, hosting a very hitech website with lots of processing power would drain the cpu power and battery of the ESP32 so for now the webpage will stay as minimal as possible.
 ### 6.2. Power Management:
-Managing power consumption to extend battery life while maintaining performance. Implemented power-
-saving modes and optimized code to reduce CPU load.
+The radio transmition is the most demanding process on the ESP32. There are builtin ESP32 power options regarding WiFi usage, closing and opening the WiFi antenna and lowering the rate at which packages are being sent. If there is a stable latency of 20ms, then the ESP32 can sleep for most of the time, wake up to transmit or receive and then fall asleep again. These techniques are being researched for optimum power performance. The code it self is quite lite, and the processing power needed for it is of minimal impact on the battery life.
 ## 7. Conclusion
 ### 7.1. Project Recap:
 The wireless MIDI controller successfully achieved its goals, providing a flexible and portable solution
 for musicians and producers.
 ### 7.2. Potential Improvements:
-Exploring additional triggers, integrating more sensors, or expanding the web interface with more controls.
+Integrated additional buttons & functions, integrating more sensors & HID, or expanding the web interface with more controls.
 ### 7.3. Future Work:
-Possible developments include expanding the range of the controller, integrating with more DAWs, or
-adding Bluetooth support.
+3D printed casing.
 ## 8. References
 ### 8.1. Citations:
 List of any technical papers, tutorials, or online resources consulted during the project.
