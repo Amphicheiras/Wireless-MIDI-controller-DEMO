@@ -4,7 +4,7 @@
 ** In the demo video I reset the ESP32 controller to boot up fresh, then leave the controller on the leveled surface of my desk to calibrate, and then I jam my Ableton preset with the controller.**
 ## 1. Introduction
 ### 1.0 Who am I, what is this?:
-I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is but a brief demo of our workings without exposing the classified prototype ideas behind our bigger commercial projects.
+I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is a brief demo of our workings without exposing the classified prototype ideas behind our bigger commercial projects.
 ### 1.1. Background on MIDI Technology:
 Musical Instrument Digital Interface (MIDI) is a protocol designed to allow electronic musical instruments, computers, and other devices to communicate. It has been a cornerstone in music production for decades.
 ### 1.2. Need for Wireless MIDI Controllers:
