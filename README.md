@@ -18,8 +18,7 @@ Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and
 Provides portable power to the ESP32. The (dis)charging chip ensures the battery is safely charged and
 discharged, maintaining optimal power levels for reliable operation.
 ### 2.3. ICM-20948 IMU:
-A 9-axis motion sensor used for detecting gestures or movements that can be mapped to MIDI controls.
-Serial connection with I2C
+A 9-axis motion sensor connected via I2C serial connection, used for detecting gestures or movements that can be mapped to MIDI controls.
 ### 2.4. Software Tools:
 #### 2.4.1. VS Code with PlatformIO:
 Integrated development environment used for writing, testing, and deploying code to the ESP32. Various libraries imported through PlatformIO were used to manage ESP32, IMU and MIDI functionalities. Below is the OOP abstract structure of the source code.
