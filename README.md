@@ -18,7 +18,7 @@ The controller features a web interface for remote control and integrates seamle
 As a DIY project, I aimed for budget friendly solutions, at least for the research part, there werent many compromises regarding component quality, and where it really mattered, there was no compromise at all (ICM-20948 chip).
 ### 2.1 Caseing:
 For the sake of this demo I crafted a carton caseing to hold the hardware together. This is a temporal solution.
-For the bigger projects, there are 3D files for 3D printed caseings which unfortunately have not been printed yet.
+For the bigger projects, there are 3D files for 3D printed casings.
 ### 2.2. ESP32 Microcontroller:
 Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing, RTOS and wireless communication.
 ### 2.3. Li-Ion 18650 Battery and Charging/Discharge Chip:
