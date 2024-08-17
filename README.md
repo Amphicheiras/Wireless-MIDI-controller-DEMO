@@ -1,7 +1,7 @@
 # UF0 - A wireless MIDI adventure
 ** DEMO VIDEO: https://drive.google.com/file/d/1XsRHFkM4G59OaG00kbQT03Dq-mRu1x4l/view?usp=drive_link **
 
-** In the demo video I first reset the ESP32 controller to boot up fresh, then leave the controller on the leveled surface of my desk to calibrate, and then I jam my Ableton preset with the controller. The bandpass frequency filter used in the demo video is my DIY VST3 audio filter made with JUCE shown [here](https://github.com/Amphicheiras/BandpassFilter).**
+** In the demo video I first reset the ESP32 controller to boot up fresh, then place the controller on the leveled surface of my desk to calibrate, and then I jam my Ableton preset with the controller. The bandpass frequency filter used in the demo video is my DIY VST3 audio filter made with JUCE shown [here](https://github.com/Amphicheiras/BandpassFilter).**
 ## 1. Introduction
 ### 1.0 Who am I, what is this?:
 I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is a brief demo of our workings without exposing the classified prototype ideas behind our bigger commercial projects.
