@@ -1,7 +1,7 @@
-# UF0 - A wireless MIDI adventure
+# UF0 – A wireless MIDI adventure
 ** DEMO VIDEO: https://drive.google.com/file/d/1XsRHFkM4G59OaG00kbQT03Dq-mRu1x4l/view?usp=drive_link **
 
-** In the demo video I first reset the ESP32 controller to boot up fresh, then place the controller on the leveled surface of my desk to calibrate, and then I jam my Ableton preset with the controller. The bandpass frequency filter used in the demo video is my DIY VST3 audio filter made with JUCE shown [here](https://github.com/Amphicheiras/BandpassFilter).**
+** In the demo video I first reset the ESP32 controller to boot up fresh, then place the controller on the leveled surface of my desk to calibrate, and then I jam my Ableton preset with the controller. The band-pass frequency filter used in the demo video is my DIY VST3 audio filter made with JUCE shown [here](https://github.com/Amphicheiras/BandpassFilter).**
 ## 1. Introduction
 ### 1.0 Who am I, what is this?:
 I'm the hardware & embedded software engineer of a family startup focused on electronic musical instruments. This repo is a brief demo of our workings without exposing the classified prototype ideas behind our bigger commercial projects.
@@ -16,7 +16,7 @@ The controller features a web interface for remote control and integrates seamle
 ## 2. Components and Materials
 ### 2.0. Market Research and Cost:
 As a DIY project, I aimed for budget friendly solutions, at least for the research part, there werent many compromises regarding component quality, and where it really mattered, there was no compromise at all (ICM-20948 chip).
-### 2.1 Caseing:
+### 2.1 Casing:
 For the sake of this demo I crafted a carton casing to hold the hardware together. This is a temporary solution.
 For the bigger projects, there are CAD files for 3D printed casings.
 ### 2.2. ESP32 Microcontroller:
@@ -46,7 +46,7 @@ Software used to monitor and route MIDI data on a Windows PC. It acts as a MIDI 
 processor.
 ### 2.7. HTML Web Interface:
 A simple HTML web page is hosted on the ESP32 allowing users to control the MIDI controller remotely from
-a PC, a smartphone, basically any device that can operate a web browser. Controls like MIDI transmition play, stop, and solo are available and also an option so save the current, or load the last MIDI configuration.
+a PC, a smartphone, basically any device that can operate a web browser. Controls like MIDI transmission play, stop, and solo are available and also an option so save the current, or load the last MIDI configuration.
 ![jam_the_object](https://github.com/Amphicheiras/Wireless-MIDI-controller-DEMO/blob/MIDI-controller/media/Webpage_-_Jam_the_object.png?raw=true)
 ## 3. Design and Implementation
 ### 3.1. Hardware Architecture:
@@ -66,12 +66,12 @@ processing.
 Using VS Code and PlatformIO, custom firmware was written to process sensor data and send corresponding 
 MIDI signals via Wi-Fi. Libraries like AppleMIDI facilitated the MIDI communication.
 ### 3.4. Wi-Fi Configuration:
-If the ESP32 cannot connect to a WiFi network, it starts in WiFi setup mode. In this mode it acts as a router in which one must connect to the device and enter the network's credential for the controller to connect to. Once the correct credentials are entered the controller connects to the Wifi network with automatic IP address assignment. Then the ESP32 communicates with rtpMIDI on its designated IP address, enabling the wireless transmission of MIDI data.
+If the ESP32 cannot connect to a Wi-Fi network, it starts in Wi-Fi setup mode. In this mode it acts as a router in which one must connect to the device and enter the network's credential for the controller to connect to. Once the correct credentials are entered the controller connects to the Wi-Fi network with automatic IP address assignment. Then the ESP32 communicates with rtpMIDI on its designated IP address, enabling the wireless transmission of MIDI data.
 ## 4. Software Integration
 ### 4.1. Configuring rtpMIDI:
 To use the rtpMIDI you must first create a session for your computer, then create a directory which contains the controller's info such as Name, IP-address and Port and then just press the connect button. The rtpMIDI has a built in latency gauge but I find it is not very precise since is measures the latency based on the signals transmitted from the controller, so if the actual latency is for example 50ms but a MIDI signal is transmitted, by will, every 1000ms then the latency prompt will display a 1000ms latency.
 ### 4.2. Ableton Live 11 Integration:
-Using the AppleMIDI library, the controller can behave as a MIDI device. Then, on the Ableton settings I use a MackeControl surface with input from the computer's rtpMIDI session created in the previous step. Then, Ableton can see the MIDI signals from every MIDI channel the controller is transmitting. Then one can map each MIDI CC from the different channels in whatevere parameter he likes using the MIDI Mappings editor in Ableton. After you setup your mappings you can just save the Ableton project and the mappings will load automatically when loading the project.
+Using the AppleMIDI library, the controller can behave as a MIDI device. Then, on the Ableton settings I use a MackieControl surface with input from the computer's rtpMIDI session created in the previous step. Then, Ableton can see the MIDI signals from every MIDI channel the controller is transmitting. Then one can map each MIDI CC from the different channels in whatever parameter he likes using the MIDI Mappings editor in Ableton. After you setup your mappings you can just save the Ableton project and the mappings will load automatically when loading the project.
 ## 5. Testing and Results
 ### 5.1. Performance Metrics:
 #### Latency:
@@ -81,12 +81,13 @@ The range is virtually limitless for anyone connected to the same LAN, regardles
 ### 5.2. Battery Life:
 A 3500mAh 18650 type Li-Ion is more than enough to supply the controller for a 8 hour jamming session.
 ### 5.3. Web Interface Testing:
-The webpage intercommunication is seamless and stable.
+The web page intercommunication is seamless and stable.
 ## 6. Challenges and Solutions
 ### 6.1. Connectivity Issues:
-One sort of an issue is that when a device occupies the IP address of the controller's last session, then the controller will assign itself a different IP address. Then you will have no way of getting that address and you will have to setup the connection again. There is research on working around this issue. Since minimum latency is required, hosting a very hitech website with lots of processing power would drain the cpu power and battery of the ESP32 so for now the webpage will stay as minimal as possible.
+One sort of an issue is that when a device occupies the IP address of the controller's last session, then the controller will assign itself a different IP address. Then you will have no way of getting that address and you will have to setup the connection again. There is research on working around this issue. Since minimum latency is required, hosting a hi-tech website with lots of processing power would drain the cpu power and battery of the ESP32 so for now the web page will stay as minimal as possible.
 ### 6.2. Power Management:
-The radio transmition is the most demanding process on the ESP32. There are builtin ESP32 power options regarding WiFi usage, closing and opening the WiFi antenna and lowering the rate at which packages are being sent. If there is a stable latency of 20ms, then the ESP32 can sleep for most of the time, wake up to transmit or receive and then fall asleep again. These techniques are being researched for optimum power performance. The code it self is quite light, and the processing power needed for it, is of minimal impact on the battery life.
+The radio transmission is the most demanding process on the ESP32. There are builtin ESP32 power options regarding Wi-Fi usage, closing and opening the Wi-Fi antenna and lowering the rate at which
+ packages are being sent. If there is a stable latency of 20ms, then the ESP32 can sleep for most of the time, wake up to transmit or receive and then fall asleep again. These techniques are being researched for optimum power performance. The code it self is quite light, and the processing power needed for it, is of minimal impact on the battery life.
 ## 7. Conclusion
 ### 7.1. Project Recap:
 The wireless MIDI controller successfully achieved its goals, providing a flexible and portable solution
