@@ -17,7 +17,7 @@ The controller features a web interface for remote control and integrates seamle
 ### 2.0. Market Research and Cost:
 As a DIY project, I aimed for budget friendly solutions, at least for the research part, there werent many compromises regarding component quality, and where it really mattered, there was no compromise at all (ICM-20948 chip).
 ### 2.1 Caseing:
-For the sake of this demo I crafted a carton caseing to hold the hardware together. This is a temporal solution.
+For the sake of this demo I crafted a carton caseing to hold the hardware together. This is a temporary solution.
 For the bigger projects, there are CAD files for 3D printed casings.
 ### 2.2. ESP32 Microcontroller:
 Chosen for its budget friendly Wi-Fi capability, dual-core processing power, and versatile GPIO pins, the ESP32 is the heart of the controller, handling all MIDI signal processing, RTOS and wireless communication.
@@ -86,7 +86,7 @@ The webpage intercommunication is seamless and stable.
 ### 6.1. Connectivity Issues:
 One sort of an issue is that when a device occupies the IP address of the controller's last session, then the controller will assign itself a different IP address. Then you will have no way of getting that address and you will have to setup the connection again. There is research on working around this issue. Since minimum latency is required, hosting a very hitech website with lots of processing power would drain the cpu power and battery of the ESP32 so for now the webpage will stay as minimal as possible.
 ### 6.2. Power Management:
-The radio transmition is the most demanding process on the ESP32. There are builtin ESP32 power options regarding WiFi usage, closing and opening the WiFi antenna and lowering the rate at which packages are being sent. If there is a stable latency of 20ms, then the ESP32 can sleep for most of the time, wake up to transmit or receive and then fall asleep again. These techniques are being researched for optimum power performance. The code it self is quite lite, and the processing power needed for it is of minimal impact on the battery life.
+The radio transmition is the most demanding process on the ESP32. There are builtin ESP32 power options regarding WiFi usage, closing and opening the WiFi antenna and lowering the rate at which packages are being sent. If there is a stable latency of 20ms, then the ESP32 can sleep for most of the time, wake up to transmit or receive and then fall asleep again. These techniques are being researched for optimum power performance. The code it self is quite light, and the processing power needed for it, is of minimal impact on the battery life.
 ## 7. Conclusion
 ### 7.1. Project Recap:
 The wireless MIDI controller successfully achieved its goals, providing a flexible and portable solution
