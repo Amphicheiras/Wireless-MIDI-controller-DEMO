@@ -226,18 +226,24 @@ public:
 				// roll (x-axis rotation)
 				double t0 = +2.0 * (q0 * q1 + q2 * q3);
 				double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
-				roll = atan2(t0, t1) * 180.0 / PI;
+				roll = -atan2(t0, t1) * 180.0 / PI;
 
 				// pitch (y-axis rotation)
-				double t2 = +2.0 * (q0 * q2 - q3 * q1);
-				t2 = t2 > 1.0 ? 1.0 : t2;
-				t2 = t2 < -1.0 ? -1.0 : t2;
-				pitch = asin(t2) * 180.0 / PI;
+				// double t2 = +2.0 * (q0 * q2 - q3 * q1);
+				// t2 = t2 > 1.0 ? 1.0 : t2;
+				// t2 = t2 < -1.0 ? -1.0 : t2;
+				// pitch = asin(t2) * 180.0 / PI;
+				double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
+				double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
+				// Compute pitch in radians
+				double pitch_rad = atan2(sin_pitch, cos_pitch);
+				// Convert pitch from radians to degrees
+				pitch = pitch_rad * 180.0 / PI;
 
 				// yaw (z-axis rotation)
 				double t3 = +2.0 * (q0 * q3 + q1 * q2);
 				double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
-				yaw = atan2(t3, t4) * 180.0 / PI;
+				yaw = -atan2(t3, t4) * 180.0 / PI;
 
 				// Update AGMT values
 				if (myICM.dataReady())

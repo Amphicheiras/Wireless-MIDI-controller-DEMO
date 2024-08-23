@@ -108,17 +108,17 @@ public:
 		// Transmit YPR
 		if (pitchTransmit)
 		{
-			pitchMIDI = degrees2MIDI(pitch, -90, 90, false, false);
+			pitchMIDI = degrees2MIDI(pitch, -90, 90);
 			MIDI.sendControlChange(MIDI_CC, pitchMIDI, 1);
 		}
 		if (rollTransmit)
 		{
-			rollMIDI = degrees2MIDI(roll, -90, 90, false, true);
+			rollMIDI = degrees2MIDI(roll, -90, 90);
 			MIDI.sendControlChange(MIDI_CC, rollMIDI, 2);
 		}
 		if (yawTransmit)
 		{
-			yawMIDI = degrees2MIDI(yaw, -90, 90, true, true);
+			yawMIDI = degrees2MIDI(yaw, -90, 90, true);
 			MIDI.sendControlChange(MIDI_CC, yawMIDI, 3);
 		}
 		// Transmit XYZ
@@ -207,9 +207,9 @@ public:
 				tilt = map(tilt, 360, 181, -1, -180);
 		}
 		// Return if out of bounds
-		if (tilt < fromAngle && tilt > 2 * fromAngle)
+		if (tilt < fromAngle)
 			return 0;
-		if (tilt > toAngle && tilt < 2 * toAngle)
+		if (tilt > toAngle)
 			return 127;
 		// Map [-fromAngle, toAngle] -> [0, 127]
 		if (tilt < 0)

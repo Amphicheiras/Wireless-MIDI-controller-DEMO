@@ -47,9 +47,9 @@ public:
 	{
 		if ((millis() - FSM_t0) > monitorHz)
 		{
-			DBG(F("\nRaw Roll:"), roll, F("\tMIDI Roll:"), rollMIDI);
-			DBG(F("Raw Pitch:"), pitch, F("\tMIDI Pitch:"), pitchMIDI);
-			DBG(F("Relative Yaw:"), yaw, F("\tMIDI Yaw:"), yawMIDI);
+			DBG(F("\nDegrees Roll:"), roll, F("\tMIDI Roll:"), rollMIDI);
+			DBG(F("Degrees Pitch:"), pitch, F("\tMIDI Pitch:"), pitchMIDI);
+			DBG(F("Degrees Yaw:"), yaw, F("\tMIDI Yaw:"), yawMIDI);
 			DBG(F("State Roll, Pitch, Yaw:"), rollTransmit, pitchTransmit, yawTransmit);
 			// DBG(F("Raw X:"), xPosition, F("\tMIDI X:"), xMIDI);
 			// DBG(F("Raw Y:"), yPosition, F("\tMIDI Y:"), yMIDI);
