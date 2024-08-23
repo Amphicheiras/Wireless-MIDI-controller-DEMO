@@ -68,7 +68,7 @@
   // TRIGGERZ
     #define TRIGGER_A 25  // R
     #define TRIGGER_B 26  // G
-    #define TRIGGER_C 23  // B
+    #define TRIGGER_C 18  // B
     bool TRIGGER_A_STATE, TRIGGER_B_STATE, TRIGGER_C_STATE,
          TRIGGER_A_STATE_past, TRIGGER_B_STATE_past, TRIGGER_C_STATE_past;
   
@@ -142,11 +142,11 @@ class UF0_BUTTON{
     // Button do:
     // Hold BUTTON_ON_OFF:
       if (BUTTON_ON_OFF_state == HIGH && BUTTON_ON_OFF_state_past == LOW){
-        startSleepTimer();
+        // startSleepTimer();
       }
     // Let BUTTON_ON_OFF
       if (BUTTON_ON_OFF_state == LOW && BUTTON_ON_OFF_state_past == HIGH){
-        resetSleepTimer();
+        // resetSleepTimer();
       }
     // Hold BUTTON_SOLO:
       if (BUTTON_SOLO_state == HIGH){

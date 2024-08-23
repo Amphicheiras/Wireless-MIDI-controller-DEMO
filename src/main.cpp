@@ -6,11 +6,9 @@
     #include <UF0_OS/UF0_FSM.h>
     #include <UF0_HARDWARE/UF0_GYRO.h>
     #include <UF0_NETWORK/UF0_NETWORK.h>
-    #include <UF0_NETWORK/UF0_WEBSITE_API.h>
     #include <UF0_MUSIC/UF0_MIDI.h>
     #include <UF0_OS/UF0_BLACKMAGIC.h>
     #include <UF0_HARDWARE/UF0_HARDWARE.h>
-    #include <UF0_NETWORK/UF0_WEBSITE_API.h>
 
     
   // Instances
@@ -31,16 +29,11 @@ void setup(){
   init();
   DBG(F("===================== BOOT TRIGGERS ==================="));
   UF0_TRIGGER triggerDriver(true);
-  DBG(F("===================== BOOT JOYSTICK ==================="));
-  UF0_JOYSTICK joystickDriver(true);
-  DBG(F("===================== BOOT POWER ==================="));
-  UF0_POWER powerHandler(true);
   DBG(F("===================== BOOT WEBSERVER ==================="));
-  DBG("Batter %:", powerHandler.get_battery_percent());
   UF0_WEBSERVER serverDriver(&powerHandler, &midiDriver, &blackmagic);
   DBG(F("===================== BOOT WIFI ==================="));
   UF0_WiFi WiFiDriver(true);
-  DBG(F("===================== BOOT ICM GYRO ==================="));
+  DBG(F("===================== BOOT GYRO ==================="));
   UF0_GYRO gyroDriver(true);
   DBG(F("===================== BOOT MIDI ==================="));
   UF0_MIDI midiDriver(true);
@@ -53,8 +46,8 @@ void setup(){
 
 void loop(){
   triggerDriver.loop();
-  midiDriver.loop();
   gyroDriver.loop();
+  midiDriver.loop();
   fsmDriver.loop();
   blackmagic.loop();
 }
