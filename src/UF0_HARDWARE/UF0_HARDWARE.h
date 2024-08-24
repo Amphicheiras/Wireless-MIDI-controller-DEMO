@@ -1,5 +1,5 @@
 /*
-	*** Buttons, Triggers, LEDs, Viber & Power related operations ***
+	*** Buttons, Triggers, LEDs & Power related operations ***
 
 		  UF0_BUTTON class:
 
@@ -11,9 +11,6 @@
 
 
 		  UF0_POWER class:
-
-
-		  UF0_VIBER class:
 */
 
 #ifndef UF0_HARDWARE_h

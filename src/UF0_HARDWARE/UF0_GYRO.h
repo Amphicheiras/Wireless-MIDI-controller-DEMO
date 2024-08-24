@@ -136,9 +136,7 @@ private:
 		while (!initialized)
 		{
 			// Initialize the ICM-20948
-			// If the DMP is enabled, .begin performs a minimal startup. We need to configure the sample mode etc. manually.
 			// myICM.begin(SPI_CS, mySPI);
-
 			myICM.begin(WIRE_PORT, 1);
 
 			DBG(F("Initialization of the sensor returned: "), myICM.statusString());
@@ -187,8 +185,7 @@ private:
 		{
 			DBG(F("Enable DMP failed!"));
 			DBG(F("Please check that you have uncommented line 29 (#define ICM_20948_USE_DMP) in ICM_20948_C.h..."));
-			while (1)
-				;
+			while (1);
 		}
 	}
 
@@ -228,17 +225,9 @@ public:
 				double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
 				roll = -atan2(t0, t1) * 180.0 / PI;
 
-				// pitch (y-axis rotation)
-				// double t2 = +2.0 * (q0 * q2 - q3 * q1);
-				// t2 = t2 > 1.0 ? 1.0 : t2;
-				// t2 = t2 < -1.0 ? -1.0 : t2;
-				// pitch = asin(t2) * 180.0 / PI;
 				double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
 				double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
-				// Compute pitch in radians
-				double pitch_rad = atan2(sin_pitch, cos_pitch);
-				// Convert pitch from radians to degrees
-				pitch = pitch_rad * 180.0 / PI;
+				pitch = atan2(sin_pitch, cos_pitch) * 180.0 / PI;
 
 				// yaw (z-axis rotation)
 				double t3 = +2.0 * (q0 * q3 + q1 * q2);
@@ -282,31 +271,8 @@ public:
 					getAbsoluteDisplacement(xAcceleration, yAcceleration, zAcceleration, accelReadTime, velocity, displacement);
 					GYRO_t_accel = millis();
 				}
-
-#ifndef QUAT_ANIMATION
-				// DBG("Roll:", roll, " Pitch:", pitch, " Yaw:", yaw);
-#else
-				// Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
-				SERIAL_PORT.print(F("{\"quat_w\":"));
-				SERIAL_PORT.print(q0, 3);
-				SERIAL_PORT.print(F(", \"quat_x\":"));
-				SERIAL_PORT.print(q1, 3);
-				SERIAL_PORT.print(F(", \"quat_y\":"));
-				SERIAL_PORT.print(q2, 3);
-				SERIAL_PORT.print(F(", \"quat_z\":"));
-				SERIAL_PORT.print(q3, 3);
-				SERIAL_PORT.println(F("}"));
-#endif
 			}
 		}
-
-		if (myICM.status != ICM_20948_Stat_FIFOMoreDataAvail) // If more data is available then we should read it right away - and not delay
-		{
-			delay(10);
-		}
-
-		newAccelZ = (float)data.Raw_Accel.Data.Z;
-		;
 	}
 };
 

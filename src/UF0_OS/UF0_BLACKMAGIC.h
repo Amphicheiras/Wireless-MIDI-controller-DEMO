@@ -57,43 +57,6 @@ public:
 		virtualTarget = virtualGrid(4, 3, -90, +90, -90, +90);
 	}
 
-	// void save(auto saveWhat, char* saveAs, char* saveAt){
-	//   preferences.begin(saveAt, false);
-	//   preferences.put(saveAs, saveWhat);
-	//   preferences.end();
-	// }
-
-	// auto load(auto loadWhat, char* loadFrom){
-	//   auto toReturn;
-	//   preferences.begin(loadFrom, true);
-	//   toReturn = get(loadWhat, 0);
-	//   preferences.end();
-	//   return toReturn;
-	// }
-
-	void pushCopyBuffer(int *x) {
-
-	};
-
-	void popCopyBuffer(int *x) {
-
-	};
-
-	void copy(int *copyObject)
-	{
-		pushCopyBuffer(copyObject);
-	}
-
-	void paste(int *pasteDestination)
-	{
-		popCopyBuffer(pasteDestination);
-	}
-
-	void remove()
-	{
-		// preferences.remove()?
-	}
-
 	// Write to disk
 	void savePreset()
 	{
