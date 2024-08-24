@@ -1,7 +1,7 @@
 #ifndef CREDENTIALSPAGE_h
 #define CREDENTIALSPAGE_h
 
-const char* credentialsHTML = R"=====(
+const char *credentialsHTML = R"=====(
 
   <!DOCTYPE html>
   <html>
