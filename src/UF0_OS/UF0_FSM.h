@@ -18,7 +18,7 @@
 #include <Preferences.h>
 // Main DBG
 #define monitorActive true
-#define monitorHz 500
+#define monitorHz 50000
 // Timers
 unsigned long FSM_t0 = millis();
 

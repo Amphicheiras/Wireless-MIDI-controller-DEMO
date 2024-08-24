@@ -212,13 +212,15 @@ public:
 			if (TRIGGER_A_STATE == HIGH && TRIGGER_A_STATE_past == LOW)
 			{
 				// Turn off previously played note, if any
-				midii->sendMIDINoteOn(MIDINoteOn, 100, 5);
+				// midii->sendMIDINoteOn(MIDINoteOn, 100, 5);
+				midii->sendMIDIChordOn(MIDINoteOn, 70, 5);
 			}
 			// Let T1:
 			if (TRIGGER_A_STATE == LOW && TRIGGER_A_STATE_past == HIGH)
 			{
 				// Turn off previously played note, if any
-				midii->sendMIDINoteOff(MIDINoteOn, 100, 5);
+				// midii->sendMIDINoteOff(MIDINoteOn, 100, 5);
+				midii->sendMIDIChordOff(MIDINoteOn, 70, 5);
 			}
 			// Hold T2:
 			if (TRIGGER_B_STATE == HIGH && TRIGGER_B_STATE_past == LOW)

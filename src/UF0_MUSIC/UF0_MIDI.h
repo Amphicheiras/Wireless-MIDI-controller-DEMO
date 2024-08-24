@@ -25,10 +25,13 @@ float pitchMIDI{0}, rollMIDI{0}, yawMIDI{0};
 // XYZ After position2MIDI
 float xMIDI{0}, yMIDI{0}, zMIDI{0};
 // A MIDI Note buffer has 1 value
-int MIDINoteOn{0}, MIDINoteOff{0};
+int MIDINoteOn{10}, MIDINoteOff{0};
 // Timers
 unsigned long MIDI_t0 = millis();
 bool controlsActive = false;
+double Arp_1, Arp_2, Arp_3 = millis();
+// Arpeggiator
+bool arpFlag = false;
 
 class UF0_MIDI
 {
@@ -202,16 +205,16 @@ public:
 	{
 		MIDI.sendNoteOn(note, velocity, channel);
 		MIDI.sendNoteOn(note, velocity, channel);
-		MIDI.sendNoteOn(note+3, velocity, channel);
-		MIDI.sendNoteOn(note+5, velocity, channel);
+		MIDI.sendNoteOn(note + 3, velocity, channel);
+		MIDI.sendNoteOn(note + 5, velocity, channel);
 	}
 	// Send MIDI note off
 	void sendMIDIChordOff(int note, int velocity, int channel)
 	{
 		MIDI.sendNoteOff(note, velocity, channel);
 		MIDI.sendNoteOff(note, velocity, channel);
-		MIDI.sendNoteOff(note+3, velocity, channel);
-		MIDI.sendNoteOff(note+5, velocity, channel);
+		MIDI.sendNoteOff(note + 3, velocity, channel);
+		MIDI.sendNoteOff(note + 5, velocity, channel);
 	}
 	// tilt: Gyro input, fromAngle: lowerLimit, toAngle: higherLimit, shift: move angle by 'shift', invert: invert tilt direction
 	double degrees2MIDI(double tilt, int fromAngle, int toAngle, bool shift = false, bool invert = false)
