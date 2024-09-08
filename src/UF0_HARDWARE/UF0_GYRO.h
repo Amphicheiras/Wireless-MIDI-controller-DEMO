@@ -35,7 +35,7 @@ ICM_20948_I2C myICM; // If using SPI create an ICM_20948_SPI object
 // YPR raw values
 float pitch, roll, yaw;
 // XYZ acceleration values
-float xAcceleration, yAcceleration, zAcceleration;
+float ax, ay, az;
 // XYZ position raw values
 float xPosition, yPosition, zPosition;
 // Heading deviation from Svalbard
@@ -47,7 +47,7 @@ int hit{-1};
 int drumHitDebounce{100} /*(ms)*/;
 int drumHitThreshold{650};
 // Timers
-unsigned long GYRO_t0 = millis(), GYRO_t1 = millis(), GYRO_t_accel = millis();
+unsigned long GYRO_t0 = millis(), GYRO_t1 = millis(), GYRO_t_accel = millis(), lastTime = 0;
 // 3D position
 float velocity[3];
 float displacement[3];
@@ -60,7 +60,7 @@ icm_20948_DMP_data_t data;
 
 /*/////////// 3D Position /////////
 
-- deltaTime?
+- compensate gravity on all axes
 
 - figure out quaternion math and variables
 
@@ -70,21 +70,23 @@ icm_20948_DMP_data_t data;
 */
 /////////////////////////////////////
 
-// ax, ay, az: accelerometer readings in m/s², deltaTime: time difference between readings (ms), velocity: variable, displacement: variable
-void getAbsoluteDisplacement(float ax, float ay, float az, float deltaTime, float *velocity, float *displacement)
-{
-	// Scale dT up to seconds
-	deltaTime /= 1000;
+// ax, ay, az: accelerometer readings in m/s², dT: time difference between readings (ms), velocity: variable, displacement: variable
+void getAbsoluteDisplacement(float ax, float ay, float az, float dT, float *velocity, float *displacement)
+{		
+	// Time step (in seconds)
+	unsigned long currentTime = millis();
+	dT = (currentTime - lastTime) / 1000.0;
+	lastTime = currentTime;
 	// Update velocity by integrating acceleration (m/s)
-	velocity[0] += ax * deltaTime;
-	velocity[1] += ay * deltaTime;
-	velocity[2] += az * deltaTime;
+	velocity[0] += ax * dT;
+	velocity[1] += ay * dT;
+	velocity[2] += az * dT;
 	// Update displacement by integrating velocity (m)
-	displacement[0] += velocity[0] * deltaTime;
-	displacement[1] += velocity[1] * deltaTime;
-	displacement[2] += velocity[2] * deltaTime;
+	displacement[0] += velocity[0] * dT;
+	displacement[1] += velocity[1] * dT;
+	displacement[2] += velocity[2] * dT;
 
-	// DBG("velocity X:", velocity[0], ", velocity Y:", velocity[1], ", velocity Z:", velocity[2], ", displacement X:", displacement[0], ", displacement Y:", displacement[1], ", displacement Z:", displacement[2]);
+	DBG("ax:", ax, "ay:", ay, "az:", az, "velocity X:", velocity[0], ", velocity Y:", velocity[1], ", velocity Z:", velocity[2], ", displacement X:", displacement[0], ", displacement Y:", displacement[1], ", displacement Z:", displacement[2]);
 }
 
 void getDisplacementOrientation(float orientation)
@@ -94,7 +96,7 @@ void getDisplacementOrientation(float orientation)
 
 void getRelevantDisplacement(float *displacement)
 {
-	getAbsoluteDisplacement(xAcceleration, yAcceleration, zAcceleration, 0.01, velocity, displacement);
+	getAbsoluteDisplacement(ax, ay, az, 0.01, velocity, displacement);
 	getDisplacementOrientation(orientation);
 
 	// rotate movement vectors using ~LINEAR ALBEGRA~
@@ -115,6 +117,56 @@ float get3DPosition(float *positionCurrent, float *positionPrevious, float *disp
 {
 	updateRelevantPosition(positionCurrent, positionPrevious, displacement);
 	return *positionCurrent;
+}
+
+void getSensorReadings()
+{
+	myICM.readDMPdataFromFIFO(&data);
+
+	if ((myICM.status == ICM_20948_Stat_Ok) || (myICM.status == ICM_20948_Stat_FIFOMoreDataAvail)) // Was valid data available?
+	{
+		if ((data.header & DMP_header_bitmap_Quat6) > 0) // We have asked for GRV data so we should receive Quat6
+		{
+			// Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
+			// In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
+			// The quaternion data is scaled by 2^30.
+
+			// Scale to +/- 1
+			double q1 = ((double)data.Quat6.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+			double q2 = ((double)data.Quat6.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+			double q3 = ((double)data.Quat6.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
+
+			// Convert the quaternions to Euler angles (roll, pitch, yaw)
+			// https://en.wikipedia.org/w/index.php?title=Conversion_between_quaternions_and_Euler_angles&section=8#Source_code_2
+
+			double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+			double q2sqr = q2 * q2;
+
+			// roll (x-axis rotation)
+			double t0 = +2.0 * (q0 * q1 + q2 * q3);
+			double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
+			roll = -atan2(t0, t1) * 180.0 / PI;
+
+			double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
+			double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
+			pitch = atan2(sin_pitch, cos_pitch) * 180.0 / PI;
+
+			// yaw (z-axis rotation)
+			double t3 = +2.0 * (q0 * q3 + q1 * q2);
+			double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
+			yaw = -atan2(t3, t4) * 180.0 / PI;
+
+			// Update AGMT values
+			if (myICM.dataReady())
+			{
+				myICM.getAGMT();
+				// Raw accelerometer readings in m/s^2
+				ax = myICM.accX() / 1000;
+				ay = myICM.accY() / 1000;
+				az = myICM.accZ() / 1000;
+			}
+		}
+	}
 }
 
 class UF0_GYRO
@@ -199,80 +251,9 @@ public:
 
 	void loop()
 	{
-		myICM.readDMPdataFromFIFO(&data);
-
-		if ((myICM.status == ICM_20948_Stat_Ok) || (myICM.status == ICM_20948_Stat_FIFOMoreDataAvail)) // Was valid data available?
-		{
-			if ((data.header & DMP_header_bitmap_Quat6) > 0) // We have asked for GRV data so we should receive Quat6
-			{
-				// Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
-				// In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
-				// The quaternion data is scaled by 2^30.
-
-				// Scale to +/- 1
-				double q1 = ((double)data.Quat6.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-				double q2 = ((double)data.Quat6.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-				double q3 = ((double)data.Quat6.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-
-				// Convert the quaternions to Euler angles (roll, pitch, yaw)
-				// https://en.wikipedia.org/w/index.php?title=Conversion_between_quaternions_and_Euler_angles&section=8#Source_code_2
-
-				double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
-				double q2sqr = q2 * q2;
-
-				// roll (x-axis rotation)
-				double t0 = +2.0 * (q0 * q1 + q2 * q3);
-				double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
-				roll = -atan2(t0, t1) * 180.0 / PI;
-
-				double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
-				double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
-				pitch = atan2(sin_pitch, cos_pitch) * 180.0 / PI;
-
-				// yaw (z-axis rotation)
-				double t3 = +2.0 * (q0 * q3 + q1 * q2);
-				double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
-				yaw = -atan2(t3, t4) * 180.0 / PI;
-
-				// Update AGMT values
-				if (myICM.dataReady())
-				{
-					myICM.getAGMT();
-				}
-				// Compensate gravity acceleration
-				if ((millis() - GYRO_t_accel) > accelReadTime){
-					const float g = 9.80665;
-					// // Acceleration (m/s^2)
-					// xAcceleration = myICM.accX() * 9.80665 / 1000;
-					// yAcceleration = myICM.accY() * 9.80665 / 1000;
-					// zAcceleration = myICM.accZ() * 9.80665 / 1000;
-
-					// Raw accelerometer readings in m/s^2
-					float ax = myICM.accX();
-					float ay = myICM.accY();
-					float az = myICM.accZ();
-
-					// Calculate pitch and roll in radians
-					float pitch = atan2(ay, sqrt(ax * ax + az * az));
-					float roll = atan2(-ax, az);
-
-					// Calculate gravity components along each axis
-					float gravityX = sin(pitch);
-					float gravityY = -sin(roll) * cos(pitch);
-					float gravityZ = cos(roll) * cos(pitch);
-
-					// Compensate the raw accelerometer readings by removing the gravity contribution
-					float compensatedX = ax - gravityX;
-					float compensatedY = ay - gravityY;
-					float compensatedZ = az - gravityZ;
-
-					// DBG(compensatedX, compensatedY, compensatedZ);
-
-					getAbsoluteDisplacement(xAcceleration, yAcceleration, zAcceleration, accelReadTime, velocity, displacement);
-					GYRO_t_accel = millis();
-				}
-			}
-		}
+		getSensorReadings();
+		// get displacement
+		getAbsoluteDisplacement(ax, ay, az, 0.01, velocity, displacement);
 	}
 };
 
