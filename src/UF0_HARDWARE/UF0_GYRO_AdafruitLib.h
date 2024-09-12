@@ -94,7 +94,7 @@ public:
 */
 /////////////////////////////////////
 
-void getAbsoluteDisplacement(float ax, float ay, float az, float deltaTime, float *velocity, float *displacement)
+void getDisplacement(float ax, float ay, float az, float deltaTime, float *velocity, float *displacement)
 {
   // Assuming ax, ay, az are accelerometer readings in m/s²
   // deltaTime is the time difference between readings in seconds (??)
@@ -119,7 +119,7 @@ void getDisplacementOrientation(float orientation)
 
 void getRelevantDisplacement(float *displacement)
 {
-	getAbsoluteDisplacement(xAcceleration, yAcceleration, zAcceleration, 0.01, velocity, displacement);
+	getDisplacement(xAcceleration, yAcceleration, zAcceleration, 0.01, velocity, displacement);
 	getDisplacementOrientation(orientation);
 
 	// rotate movement vectors using ~LINEAR ALBEGRA~

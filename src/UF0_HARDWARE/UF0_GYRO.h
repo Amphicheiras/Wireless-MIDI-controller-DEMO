@@ -2,15 +2,14 @@
 #define UF0_GYRO_ICM_20948_h
 
 /*
-	Get orientation with quaternia
+
+	Get orientation with quaternia?
 
 	Change connection to SPI
 
 	Fix 3D space
 
 */
-
-
 
 // Preliminary
 #include <SPI.h>
@@ -29,15 +28,40 @@
 // #define SPI_MISO 19
 // #define SPI_CS 5
 
-ICM_20948_I2C myICM; // If using SPI create an ICM_20948_SPI object
-// ICM_20948_SPI myICM; // If using SPI create an ICM_20948_SPI object
+ICM_20948_I2C myICM;
+// ICM_20948_SPI myICM;
 
+// Constants
+const double GRAVITY = 9.81;	   // Acceleration due to gravity (m/s^2)
+const double GRAVITY_LSB = 1000.0; // Conversion factor for raw data to g
+// Acceleration calibration offsets
+double accelX_offset = 0.0;
+double accelY_offset = 0.0;
+double accelZ_offset = 0.0;
+// Gravity calibration offsets
+double gravityX_offset = 0.0;
+double gravityY_offset = 0.0;
+double gravityZ_offset = 0.0;
+double axFilter = 0.0;
+double ayFilter = 0.0;
+double azFilter = 0.0;
+double prevOutputX = 0.0;
+double prevOutputY = 0.0;
+double prevOutputZ = 0.0;
+// Calibration parameters
+const int CALIBRATION_SAMPLES = 100;
 // YPR raw values
 float pitch, roll, yaw;
-// XYZ acceleration values
-float ax, ay, az;
+// Quaternia values
+double q0, q1, q2, q3;
+// XYZ raw acceleration values
+double axRaw, ayRaw, azRaw;
+// XYZ calibrated acceleration values
+double axCal, ayCal, azCal;
+// XYZ g compensated acceleration values
+double axComp, ayComp, azComp;
 // XYZ position raw values
-float xPosition, yPosition, zPosition;
+double xPosition, yPosition, zPosition;
 // Heading deviation from Svalbard
 double initHeading;
 // Acceleration MATH for drum hit
@@ -49,8 +73,11 @@ int drumHitThreshold{650};
 // Timers
 unsigned long GYRO_t0 = millis(), GYRO_t1 = millis(), GYRO_t_accel = millis(), lastTime = 0;
 // 3D position
-float velocity[3];
-float displacement[3];
+double dT;
+double xVelocity = 0.0;
+double yVelocity = 0.0;
+double zVelocity = 0.0;
+double displacement[3] = {0.0, 0.0, 0.0};
 float orientation;
 float positionCurrent[3];
 float positionPrevious[3];
@@ -60,54 +87,152 @@ icm_20948_DMP_data_t data;
 
 /*/////////// 3D Position /////////
 
-- compensate gravity on all axes
-
-- figure out quaternion math and variables
-
-- figure out linear algebra for orientation
-
+	fix 15 sec of 0.07 on x axis?
 
 */
 /////////////////////////////////////
 
+void getAccelSensorReadings()
+{
+	myICM.readDMPdataFromFIFO(&data);
+
+	if ((myICM.status == ICM_20948_Stat_Ok) || (myICM.status == ICM_20948_Stat_FIFOMoreDataAvail)) // Was valid data available?
+	{
+		if ((data.header & DMP_header_bitmap_Quat6) > 0) // We have asked for GRV data so we should receive Quat6
+		{
+			// Update AGMT values
+			if (myICM.dataReady())
+			{
+				// Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
+				// In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
+				// The quaternion data is scaled by 2^30.
+
+				// Scale to +/- 1
+				q1 = ((double)data.Quat6.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+				q2 = ((double)data.Quat6.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+				q3 = ((double)data.Quat6.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
+				q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+
+				double q2sqr = q2 * q2;
+
+				// roll (x-axis rotation)
+				double t0 = +2.0 * (q0 * q1 + q2 * q3);
+				double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
+				roll = -atan2(t0, t1) * 180.0 / PI;
+
+				double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
+				double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
+				pitch = atan2(sin_pitch, cos_pitch) * 180.0 / PI;
+
+				// yaw (z-axis rotation)
+				double t3 = +2.0 * (q0 * q3 + q1 * q2);
+				double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
+				yaw = -atan2(t3, t4) * 180.0 / PI;
+				myICM.getAGMT();
+				// Raw accelerometer readings in m/s^2
+				axRaw = myICM.accX() / GRAVITY_LSB;
+				ayRaw = myICM.accY() / GRAVITY_LSB;
+				azRaw = myICM.accZ() / GRAVITY_LSB;
+
+				// DBG("       Raw", axRaw, ayRaw, azRaw);
+			}
+		}
+	}
+}
+
+void calibrateAccelerometer()
+{
+	Serial.println("Calibrating accelerometer...");
+
+	double accelX_sum = 0.0;
+	double accelY_sum = 0.0;
+	double accelZ_sum = 0.0;
+
+	// Must be while because ICM data is not always ready
+	int i = 0;
+	while (i < CALIBRATION_SAMPLES)
+	{
+		if (myICM.dataReady())
+		{
+			// Fetch accelerometer data
+			myICM.getAGMT();
+			// Sum accelerometer readings (in g)
+			accelX_sum += myICM.accX() / GRAVITY_LSB;
+			accelY_sum += myICM.accY() / GRAVITY_LSB;
+			accelZ_sum += myICM.accZ() / GRAVITY_LSB;
+			i++;
+		}
+		delay(10); // Short delay between samples
+	}
+
+	// Assume that when flat, X and Y should be 0g and Z should be approximately 1g
+	accelX_offset = accelX_sum / CALIBRATION_SAMPLES;
+	accelY_offset = accelY_sum / CALIBRATION_SAMPLES;
+	accelZ_offset = (accelZ_sum / CALIBRATION_SAMPLES) - 1.0;
+
+	Serial.println("Calibration completed. Offsets: X: ");
+	Serial.print(accelX_offset);
+	Serial.print(" g, Y: ");
+	Serial.print(accelY_offset);
+	Serial.print(" g, Z: ");
+	Serial.print(accelZ_offset);
+	Serial.println(" g");
+}
+
+void calibrateGravityVector()
+{
+	Serial.println("Calibrating accelerometer...");
+
+	double gravityX_sum = 0.0;
+	double gravityY_sum = 0.0;
+	double gravityZ_sum = 0.0;
+
+	// Calculate bias by comparing readings to gravity vector
+	for (int i = 0; i < CALIBRATION_SAMPLES; i++)
+	{
+		// Calculate gravity vector components based on quaternion
+		getAccelSensorReadings();
+		gravityX_sum += 2 * (q1 * q3 - q0 * q2);
+		gravityY_sum += 2 * (q0 * q1 + q2 * q3);
+		gravityZ_sum += (q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3) - 1;
+		DBG(gravityX_sum, gravityY_sum, gravityZ_sum);
+		delay(10);
+	}
+
+	// Average the biases
+	gravityX_offset = gravityX_sum / CALIBRATION_SAMPLES;
+	gravityY_offset = gravityY_sum / CALIBRATION_SAMPLES;
+	gravityZ_offset = gravityZ_sum / CALIBRATION_SAMPLES;
+
+	DBG("Calibration completed. Offsets: X: ", gravityX_offset, ", Y: ", gravityY_offset, ", Z: ", gravityZ_offset);
+}
+
 // ax, ay, az: accelerometer readings in m/s², dT: time difference between readings (ms), velocity: variable, displacement: variable
-void getAbsoluteDisplacement(float ax, float ay, float az, float dT, float *velocity, float *displacement)
-{		
+void getDisplacement()
+{
 	// Time step (in seconds)
 	unsigned long currentTime = millis();
 	dT = (currentTime - lastTime) / 1000.0;
 	lastTime = currentTime;
-	// Update velocity by integrating acceleration (m/s)
-	velocity[0] += ax * dT;
-	velocity[1] += ay * dT;
-	velocity[2] += az * dT;
-	// Update displacement by integrating velocity (m)
-	displacement[0] += velocity[0] * dT;
-	displacement[1] += velocity[1] * dT;
-	displacement[2] += velocity[2] * dT;
+	// Update values if quaternia are ready
+	if (!std::isnan(q0))
+	{
+		// Update velocity by integrating acceleration (m/s)
+		xVelocity += axFilter * dT;
+		yVelocity += ayFilter * dT;
+		zVelocity += azFilter * dT;
+		// Update displacement by integrating velocity (m)
+		displacement[0] += xVelocity * dT;
+		displacement[1] += yVelocity * dT;
+		displacement[2] += zVelocity * dT;
+	}
 
-	DBG("ax:", ax, "ay:", ay, "az:", az, "velocity X:", velocity[0], ", velocity Y:", velocity[1], ", velocity Z:", velocity[2], ", displacement X:", displacement[0], ", displacement Y:", displacement[1], ", displacement Z:", displacement[2]);
-}
-
-void getDisplacementOrientation(float orientation)
-{
-	// quaternion N stuff
-}
-
-void getRelevantDisplacement(float *displacement)
-{
-	getAbsoluteDisplacement(ax, ay, az, 0.01, velocity, displacement);
-	getDisplacementOrientation(orientation);
-
-	// rotate movement vectors using ~LINEAR ALBEGRA~
-	// displacement[0] += orientation[0]; // + LINEAR ALBEGRA
-	// displacement[1] += orientation[1]; // + LINEAR ALBEGRA
-	// displacement[2] += orientation[2]; // + LINEAR ALBEGRA
+	DBG("ax:", axComp, "ay:", ayComp, "az:", azComp, "velocity X:", xVelocity, ", velocity Y:", yVelocity, ", velocity Z:", zVelocity, ", displacement X:", displacement[0], ", displacement Y:", displacement[1], ", displacement Z:", displacement[2]);
 }
 
 void updateRelevantPosition(float *positionCurrent, float *positionPrevious, float *displacement)
 {
-	getRelevantDisplacement(displacement);
+	getDisplacement();
 	positionCurrent[0] = positionPrevious[0] + displacement[0];
 	positionCurrent[1] = positionPrevious[1] + displacement[1];
 	positionCurrent[2] = positionPrevious[2] + displacement[2];
@@ -119,54 +244,50 @@ float get3DPosition(float *positionCurrent, float *positionPrevious, float *disp
 	return *positionCurrent;
 }
 
-void getSensorReadings()
+void getFilteredAccel()
 {
-	myICM.readDMPdataFromFIFO(&data);
+	double alpha = 0.1;
 
-	if ((myICM.status == ICM_20948_Stat_Ok) || (myICM.status == ICM_20948_Stat_FIFOMoreDataAvail)) // Was valid data available?
+	// Update values if quaternia are ready
+	if (!std::isnan(axComp) && !std::isnan(ayComp) && !std::isnan(azComp))
 	{
-		if ((data.header & DMP_header_bitmap_Quat6) > 0) // We have asked for GRV data so we should receive Quat6
-		{
-			// Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
-			// In case of drift, the sum will not add to 1, therefore, quaternion data need to be corrected with right bias values.
-			// The quaternion data is scaled by 2^30.
-
-			// Scale to +/- 1
-			double q1 = ((double)data.Quat6.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-			double q2 = ((double)data.Quat6.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-			double q3 = ((double)data.Quat6.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-
-			// Convert the quaternions to Euler angles (roll, pitch, yaw)
-			// https://en.wikipedia.org/w/index.php?title=Conversion_between_quaternions_and_Euler_angles&section=8#Source_code_2
-
-			double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
-			double q2sqr = q2 * q2;
-
-			// roll (x-axis rotation)
-			double t0 = +2.0 * (q0 * q1 + q2 * q3);
-			double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
-			roll = -atan2(t0, t1) * 180.0 / PI;
-
-			double sin_pitch = 2.0 * (q0 * q2 - q3 * q1);
-			double cos_pitch = 1.0 - 2.0 * (q1 * q1 + q2 * q2);
-			pitch = atan2(sin_pitch, cos_pitch) * 180.0 / PI;
-
-			// yaw (z-axis rotation)
-			double t3 = +2.0 * (q0 * q3 + q1 * q2);
-			double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
-			yaw = -atan2(t3, t4) * 180.0 / PI;
-
-			// Update AGMT values
-			if (myICM.dataReady())
-			{
-				myICM.getAGMT();
-				// Raw accelerometer readings in m/s^2
-				ax = myICM.accX() / 1000;
-				ay = myICM.accY() / 1000;
-				az = myICM.accZ() / 1000;
-			}
-		}
+		axFilter = alpha * axComp + (1.0 - alpha) * prevOutputX;
+		ayFilter = alpha * ayComp + (1.0 - alpha) * prevOutputY;
+		azFilter = alpha * azComp + (1.0 - alpha) * prevOutputZ;
+		prevOutputX = axFilter;
+		prevOutputY = ayFilter;
+		prevOutputZ = azFilter;
 	}
+
+	// DBG("Filtered", axFilter, ayFilter, azFilter, "Comp", axComp, ayComp, azComp);
+}
+
+// Function to compensate for gravity in all axes
+void getCompensatedGravityAccel()
+{
+	// Gravity vector components (normalized)
+	double gravityX = 2 * (q1 * q3 - q0 * q2);
+	double gravityY = 2 * (q0 * q1 + q2 * q3);
+	double gravityZ = (q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3);
+
+	// Subtract the gravity components from accelerometer readings
+	// axComp = axCal - gravityX;
+	// ayComp = ayCal - gravityY;
+	// azComp = azCal - gravityZ;
+	axComp = axRaw - gravityX;
+	ayComp = ayRaw - gravityY;
+	azComp = azRaw - gravityZ;
+
+	// DBG("Compensated", axComp, ayComp, azComp);
+}
+
+void getCalibratedSensorReadings()
+{
+	axCal = axRaw - accelX_offset;
+	ayCal = ayRaw - accelY_offset;
+	azCal = azRaw - accelZ_offset;
+
+	// DBG(" Calibrated", axCal, ayCal, azCal);
 }
 
 class UF0_GYRO
@@ -204,6 +325,21 @@ private:
 		}
 		DBG(F("IMU connected!"));
 
+		// Accelerometer settings
+		ICM_20948_fss_t fss;
+		fss.a = gpm2;	// Set accelerometer range to ±2g
+		fss.g = dps250; // Set gyroscope range to ±250 degrees per second
+
+		// Set the full scale range for both accelerometer and gyroscope
+		myICM.setFullScale(ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr, fss);
+
+		// Configure DLPF (Digital Low Pass Filter) for noise reduction
+		ICM_20948_dlpcfg_t dlpfCfg;
+		dlpfCfg.a = acc_d473bw_n499bw;	 // Set accelerometer bandwidth
+		dlpfCfg.g = gyr_d361bw4_n376bw5; // Set gyroscope bandwidth
+
+		myICM.setDLPFcfg(ICM_20948_Internal_Acc | ICM_20948_Internal_Gyr, dlpfCfg);
+
 		// Use success to show if the DMP configuration was successful
 		bool success = true;
 
@@ -237,8 +373,11 @@ private:
 		{
 			DBG(F("Enable DMP failed!"));
 			DBG(F("Please check that you have uncommented line 29 (#define ICM_20948_USE_DMP) in ICM_20948_C.h..."));
-			while (1);
+			while (1)
+				;
 		}
+		calibrateAccelerometer();
+		// calibrateGravityVector();
 	}
 
 public:
@@ -251,9 +390,12 @@ public:
 
 	void loop()
 	{
-		getSensorReadings();
-		// get displacement
-		getAbsoluteDisplacement(ax, ay, az, 0.01, velocity, displacement);
+
+		getAccelSensorReadings();
+		getCalibratedSensorReadings();
+		getCompensatedGravityAccel();
+		getFilteredAccel();
+		getDisplacement();
 	}
 };
 
