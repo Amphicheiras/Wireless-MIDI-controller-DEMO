@@ -95,10 +95,11 @@ for musicians and producers.
 ### 7.2. Potential Improvements:
 Integrated additional buttons & functions, integrating more sensors & HID, or expanding the web interface with more controls.
 ### 7.3. Future Work:
+PCB design & print & assembly
 3D printed casing.
 ## 8. References
 ### 8.1. Citations:
-List of any technical papers, tutorials, or online resources consulted during the project.
+~
 ## 9. Trigger Functions and Implementation Details
 ### 9.1. Trigger 1: Play/Stop Note (Hold)
 Sends a MIDI note-on message when pressed and holds the note. When released, it sends a MIDI note-off message.
@@ -107,4 +108,4 @@ Similar to Trigger 1 but mapped to a MIDI control change (CC) message instead of
 ### 9.3. Trigger 3: Play/Stop Function (Toggle)
 Toggles a MIDI function on/off with each press, rather than holding it. The firmware keeps track of the toggle state and sends corresponding MIDI messages each time the trigger is activated. Used to enable or disable the delay plugin in the demo preset.
 ## Hardware Runtime Tests
-### A sum of test scripts for testing & debugging hardware components.
+~
